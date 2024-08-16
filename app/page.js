@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import getStripe from "@/utils/get-stripe";
-import { SignedIn, SignedOut, UserButton, useUser } from "@clerk/nextjs";
+import { SignedIn, SignedOut, UserButton,useUser } from "@clerk/nextjs";
 import {
   AppBar,
   Button,
