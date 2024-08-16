@@ -1,5 +1,6 @@
 "use client";
 
+
 import { useUser } from "@clerk/nextjs";
 import { useState } from "react";
 import {
@@ -26,8 +27,8 @@ import {
 } from "firebase/firestore";
 import { db } from "@/firebase";
 
-
 export default function Generate() {
+  const { user } = useUser(); // Use the useUser hook to get user information
   const [text, setText] = useState("");
   const [flashcards, setFlashcards] = useState([]);
   const [setName, setSetName] = useState("");
@@ -40,6 +41,11 @@ export default function Generate() {
   const saveFlashcards = async () => {
     if (!setName.trim()) {
       alert("Please enter a name for your flashcard set.");
+      return;
+    }
+
+    if (!user) {
+      alert("User not found. Please log in.");
       return;
     }
 
@@ -95,7 +101,6 @@ export default function Generate() {
 
       const data = await response.json();
 
-      // Assuming the API returns data in the format: { flashcards: [...] }
       if (data.flashcards) {
         setFlashcards(data.flashcards);
       } else {
