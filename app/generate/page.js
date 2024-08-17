@@ -34,6 +34,7 @@ export default function Generate() {
   const [setName, setSetName] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [flippedIndex, setFlippedIndex] = useState(null);
+  const [textFieldError, setTextFieldError] = useState(false);
 
   const handleOpenDialog = () => setDialogOpen(true);
   const handleCloseDialog = () => setDialogOpen(false);
@@ -81,8 +82,12 @@ export default function Generate() {
   };
 
  const handleSubmit = async () => {
+
+  setTextFieldError(false);
+
    if (!text.trim()) {
      alert("Please enter some text to generate flashcards.");
+     setTextFieldError(true);
      return;
    }
 
@@ -104,6 +109,7 @@ export default function Generate() {
 
      if (data.flashcards) {
        setFlashcards(data.flashcards);
+       setText("");
      } else {
        console.error("Unexpected response format:", data);
        alert("An error occurred. Please try again.");
@@ -126,16 +132,30 @@ export default function Generate() {
           <Typography variant="h4" component="h1" gutterBottom fontWeight="bold">
             Generate Flashcards
           </Typography>
-          <TextField
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            label="Enter text"
-            fullWidth
-            multiline
-            rows={4}
-            variant="outlined"
-            sx={{ mb: 2, color: 'white', borderColor: "white" }}
-          />
+            <TextField
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              label="Enter text"
+              fullWidth
+              multiline
+              required
+              rows={4}
+              variant="outlined"
+              sx={{ 
+                mb: 2, 
+                color: "white",
+                "& .MuiInputLabel-root": {color: 'white'}, 
+                "& .MuiInputLabel-root.Mui-focused": {color: !textFieldError ? "rgb(21, 101, 192)" : "red"},
+                "& .MuiOutlinedInput-root": { "& > fieldset": { borderColor: "white" }},
+                "&:hover .MuiOutlinedInput-root": { "& > fieldset": { borderColor: !textFieldError ? "rgb(21, 101, 192)": "red" }},
+              }}
+              error={textFieldError}
+              inputProps={{
+                style: { 
+                  color: "white",
+                },
+              }}
+            />
           <Button
             variant="contained"
             color="primary"
