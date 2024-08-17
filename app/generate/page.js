@@ -80,38 +80,40 @@ export default function Generate() {
     }
   };
 
-  const handleSubmit = async () => {
-    if (!text.trim()) {
-      alert("Please enter some text to generate flashcards.");
-      return;
-    }
+ const handleSubmit = async () => {
+   if (!text.trim()) {
+     alert("Please enter some text to generate flashcards.");
+     return;
+   }
 
-    try {
-      const response = await fetch("/api/generate", {
-        method: "POST",
-        body: JSON.stringify({ message: text }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+   try {
+     const response = await fetch("/api/generate", {
+       method: "POST",
+       body: JSON.stringify({ message: text }),
+       headers: {
+         "Content-Type": "application/json",
+       },
+     });
 
-      if (!response.ok) {
-        throw new Error("Failed to generate flashcards");
-      }
+     if (!response.ok) {
+       throw new Error("Failed to generate flashcards");
+     }
 
-      const data = await response.json();
+     const data = await response.json();
+     console.log("Generated flashcards:", data); // Add this line
 
-      if (data.flashcards) {
-        setFlashcards(data.flashcards);
-      } else {
-        console.error("Unexpected response format:", data);
-        alert("An error occurred. Please try again.");
-      }
-    } catch (error) {
-      console.error("Error generating flashcards:", error);
-      alert("An error occurred while generating flashcards. Please try again.");
-    }
-  };
+     if (data.flashcards) {
+       setFlashcards(data.flashcards);
+     } else {
+       console.error("Unexpected response format:", data);
+       alert("An error occurred. Please try again.");
+     }
+   } catch (error) {
+     console.error("Error generating flashcards:", error);
+     alert("An error occurred while generating flashcards. Please try again.");
+   }
+ };
+
 
   const handleCardClick = (index) => {
     setFlippedIndex(flippedIndex === index ? null : index);
