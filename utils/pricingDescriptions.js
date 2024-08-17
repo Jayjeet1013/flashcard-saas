@@ -2,7 +2,7 @@ export const pricingDescriptions = [
     {
         "title": "Free Trial",
         "price": "$0 / month",
-        "description": "Access to 3 flashcard generations.",
+        "description": "Access to 3 flashcard generations. Try it out!",
         "divider": true,
     },
     {

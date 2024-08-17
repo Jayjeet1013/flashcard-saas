@@ -118,103 +118,105 @@ export default function Generate() {
   };
 
   return (
-    <Container maxWidth="md">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Generate Flashcards
-        </Typography>
-        <TextField
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          label="Enter text"
-          fullWidth
-          multiline
-          rows={4}
-          variant="outlined"
-          sx={{ mb: 2 }}
-        />
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleSubmit}
-          fullWidth
-        >
-          Generate Flashcards
-        </Button>
-      </Box>
-
-      {flashcards.length > 0 && (
-        <Box sx={{ mt: 4 }}>
-          <Typography variant="h5" component="h2" gutterBottom>
-            Generated Flashcards
+    <Container maxWidth="100%" sx={{ backgroundImage: "linear-gradient(to top,rgb(58, 58, 58), rgb(30, 30, 30))", height: "100vh", overflowY: 'auto' }}>
+      <Container maxWidth="md" sx={{ p: 5 }}>
+        <Box sx={{ color: "white", display: "flex", flexDirection: "column", gap: 2 }}>
+          <Typography variant="h4" component="h1" gutterBottom fontWeight="bold">
+            Generate Flashcards
           </Typography>
-          <Grid container spacing={2}>
-            {flashcards.map((flashcard, index) => (
-              <Grid item xs={12} sm={6} md={4} key={index}>
-                <Card
-                  className="card-container"
-                  onClick={() => handleCardClick(index)}
-                >
-                  <div
-                    className={`card ${
-                      flippedIndex === index ? "flipped" : ""
-                    }`}
-                  >
-                    <div className="card-face card-front">
-                      <CardContent>
-                        <Typography variant="h6">Front:</Typography>
-                        <Typography>{flashcard.front}</Typography>
-                      </CardContent>
-                    </div>
-                    <div className="card-face card-back">
-                      <CardContent>
-                        <Typography variant="h6">Back:</Typography>
-                        <Typography>{flashcard.back}</Typography>
-                      </CardContent>
-                    </div>
-                  </div>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
-      )}
-
-      {flashcards.length > 0 && (
-        <Box sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
+          <TextField
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            label="Enter text"
+            fullWidth
+            multiline
+            rows={4}
+            variant="outlined"
+            sx={{ mb: 2, color: 'white', borderColor: "white" }}
+          />
           <Button
             variant="contained"
             color="primary"
-            onClick={handleOpenDialog}
+            onClick={handleSubmit}
+            fullWidth
           >
-            Save Flashcards
+            Generate Flashcards
           </Button>
         </Box>
-      )}
 
-      <Dialog open={dialogOpen} onClose={handleCloseDialog}>
-        <DialogTitle>Save Flashcard Set</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Please enter a name for your flashcard set.
-          </DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Set Name"
-            type="text"
-            fullWidth
-            value={setName}
-            onChange={(e) => setSetName(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog}>Cancel</Button>
-          <Button onClick={saveFlashcards} color="primary">
-            Save
-          </Button>
-        </DialogActions>
-      </Dialog>
+        {flashcards.length > 0 && (
+          <Box sx={{ mt: 4 }}>
+            <Typography variant="h5" component="h2" color="white" sx={{ mb: 3 }}>
+              Generated Flashcards
+            </Typography>
+            <Grid container spacing={2}>
+              {flashcards.map((flashcard, index) => (
+                <Grid item xs={12} sm={6} md={4} key={index}>
+                  <Card
+                    className="card-container"
+                    onClick={() => handleCardClick(index)}
+                  >
+                    <div
+                      className={`card ${
+                        flippedIndex === index ? "flipped" : ""
+                      }`}
+                    >
+                      <div className="card-face card-front">
+                        <CardContent>
+                          {/* <Typography variant="h6">Front:</Typography> */}
+                          <Typography variant="h6">{flashcard.front}</Typography>
+                        </CardContent>
+                      </div>
+                      <div className="card-face card-back">
+                        <CardContent>
+                          {/* <Typography variant="h6">Back:</Typography> */}
+                          <Typography variant="h6">{flashcard.back}</Typography>
+                        </CardContent>
+                      </div>
+                    </div>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
+        )}
+
+        {flashcards.length > 0 && (
+          <Box sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleOpenDialog}
+            >
+              Save Flashcards
+            </Button>
+          </Box>
+        )}
+
+        <Dialog open={dialogOpen} onClose={handleCloseDialog}>
+          <DialogTitle>Save Flashcard Set</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Please enter a name for your flashcard set.
+            </DialogContentText>
+            <TextField
+              autoFocus
+              margin="dense"
+              label="Set Name"
+              type="text"
+              fullWidth
+              value={setName}
+              onChange={(e) => setSetName(e.target.value)}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseDialog}>Cancel</Button>
+            <Button onClick={saveFlashcards} color="primary">
+              Save
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Container>
     </Container>
   );
 }
