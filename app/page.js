@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import getStripe from "@/utils/get-stripe";
-import { SignedIn, SignedOut, UserButton,useUser } from "@clerk/nextjs";
+import { SignedIn, SignedOut, UserButton, useUser } from "@clerk/nextjs";
 import {
   AppBar,
   Button,
@@ -32,10 +32,10 @@ export default function Home() {
     }
   };
   return (
-    <Container 
-      maxWidth="100%" 
-      sx={{ 
-        overflowY: "auto", 
+    <Container
+      maxWidth="100%"
+      sx={{
+        overflowY: "auto",
         pb: 10,
       }}
     >
@@ -48,21 +48,31 @@ export default function Home() {
             width: "100%",
             display: "flex",
             flexDirection: "column",
-            mt: 10
+            mt: 10,
           }}
         >
           <Box sx={{ textAlign: "center", p: 5, pb: 0 }}>
-            <Typography variant="h3" color={"white"} fontWeight="700">Welcome to Flashcard SaaS</Typography>
-            <Typography variant="h6" fontWeight="bold" sx={{ m: 3, color: "white" }}>
+            <Typography variant="h3" color={"white"} fontWeight="700">
+              Welcome to FlashLoom
+            </Typography>
+            <Typography
+              variant="h6"
+              fontWeight="bold"
+              sx={{ m: 3, color: "white" }}
+            >
               Revolutionize your learning experience with our innovative
               AI-curated interactive flashcards, designed to elevate your
               knowledge retention and engagement!
             </Typography>
-            <Button variant="contained" sx={{ borderRadius: 5 }} onClick={handleGetStartedClick}>
+            <Button
+              variant="contained"
+              sx={{ borderRadius: 5 }}
+              onClick={handleGetStartedClick}
+            >
               Get Started
             </Button>
           </Box>
-          <Divider color="white"/>
+          <Divider color="white" />
           <FeatureGrid />
           <Divider color="white" />
           <PricingGrid />
