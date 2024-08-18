@@ -14,7 +14,7 @@ import {
   CircularProgress,
   Divider,
 } from "@mui/material";
-import { doc, collection, getDocs } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/firebase";
 import Header from "../components/header";
 
@@ -22,57 +22,46 @@ export default function Flashcard() {
   const { isLoaded, isSignedIn, user } = useUser();
   const [flashcards, setFlashcards] = useState([]);
   const [flipped, setFlipped] = useState({});
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
 
   const searchParams = useSearchParams();
-  const search = searchParams.get("id");
+  const flashcardSetId = searchParams.get("id");
 
   useEffect(() => {
     async function getFlashcards() {
-      if (!search || !user) {
-        console.log("Search or user not defined.");
+      if (!flashcardSetId || !user) {
+        console.log("Flashcard set ID or user not defined.");
         return;
       }
 
-      console.log("Fetching flashcard sets for user:", user.id);
-      console.log("Flashcard set name:", search);
+ 
 
       try {
-        // Construct the reference to the flashcardSets collection
-        const flashcardSetsRef = collection(
+        // Construct the reference to the specific flashcard set document
+        const flashcardSetRef = doc(
           db,
           "users",
           user.id,
-          "flashcardSets", 
-          search
+          "flashcardSets",
+          flashcardSetId
         );
 
-        console.log("Collection reference:", flashcardSetsRef.path);
+        // Fetch the document for the specific flashcard set
+        const docSnap = await getDoc(flashcardSetRef);
 
-        // Fetch documents from the flashcardSets collection
-        const docs = await getDocs(flashcardSetsRef);
+        if (docSnap.exists()) {
+          const flashcardSetData = docSnap.data();
+          const flashcardsData = flashcardSetData.flashcards || [];
 
-        console.log(
-          "Documents retrieved:",
-          docs.docs.map((doc) => doc.data())
-        );
-
-        // Filter for the specific flashcard set and extract flashcards
-        const flashcardsData = docs.docs
-          .filter((doc) => doc.data().setName === search)
-          .map((doc) => doc.data().flashcards || ['']) // Get flashcards array from each set
-          .flat() // Flatten the array of arrays
-          .filter((flashcard) => flashcard.front && flashcard.back); // Ensure valid flashcards
-
-        console.log("Flashcards data:", flashcardsData);
-        setFlashcards(flashcardsData);
-        setLoading(false);
-
-        if (flashcardsData.length === 0) {
-          console.log("No flashcards found in the collection.");
+         
+          setFlashcards(flashcardsData);
+        } else {
+          console.log("No such document!");
         }
       } catch (error) {
         console.error("Error fetching flashcards:", error);
+      } finally {
+        setLoading(false);
       }
     }
 
@@ -81,35 +70,35 @@ export default function Flashcard() {
     } else {
       console.log("User is not signed in or not loaded yet.");
     }
-  }, [search, user, isLoaded, isSignedIn]);
+  }, [flashcardSetId, user, isLoaded, isSignedIn]);
 
-  const handleCardClick = (id) => {
-    console.log("Card clicked with id:", id);
+  const handleCardClick = (index) => {
+   
     setFlipped((prev) => ({
       ...prev,
-      [id]: !prev[id],
+      [index]: !prev[index],
     }));
   };
 
   return (
-    <Container maxWidth="md" sx={{ height: "100vh", overflowY: 'auto' }}>
+    <Container maxWidth="md" sx={{ height: "100vh", overflowY: "auto" }}>
       <Header />
-      <Typography variant="h4" fontWeight="bold" sx={{ mt: 15 }}>{search}</Typography>
+      <Typography variant="h4" fontWeight="bold" sx={{ mt: 15 }}>
+        {flashcardSetId}
+      </Typography>
       <Divider color="white" sx={{ mt: 3 }} />
-      {
-        loading 
-        ?
+      {loading ? (
         <Box
           sx={{
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            height: "60%"
+            height: "60%",
           }}
         >
           <CircularProgress />
         </Box>
-        :
+      ) : (
         <Grid container spacing={3} sx={{ mt: 2 }}>
           {flashcards.length > 0 ? (
             flashcards.map((flashcard, index) => (
@@ -185,7 +174,7 @@ export default function Flashcard() {
             </Typography>
           )}
         </Grid>
-      }
+      )}
     </Container>
   );
 }

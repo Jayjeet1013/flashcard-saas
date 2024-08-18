@@ -29,7 +29,7 @@ import { useRouter } from "next/navigation";
 import Header from "../components/header";
 
 export default function Generate() {
-  const { user } = useUser(); // Use the useUser hook to get user information
+  const { user } = useUser(); 
   const router = useRouter(); 
   const [text, setText] = useState("");
   const [flashcards, setFlashcards] = useState([]);
@@ -100,7 +100,7 @@ export default function Generate() {
 
       alert("Flashcards saved successfully!");
       handleCloseDialog();
-      router.push(`/flashcard?id=${setName}`);
+      router.push(`/flashcards`);
       setSetName("");
     } catch (error) {
       console.error("Error saving flashcards:", error);
@@ -136,7 +136,7 @@ export default function Generate() {
      }
 
      const data = await response.json();
-     console.log("Generated flashcards:", data); // Add this line
+     console.log("Generated flashcards:", data); 
 
      if (data.flashcards) {
        setFlashcards(data.flashcards);
@@ -147,7 +147,7 @@ export default function Generate() {
      }
    } catch (error) {
      console.error("Error generating flashcards:", error);
-     alert("An error occurred while generating flashcards. Please try again.");
+     alert("Please try again.");
    }
  };
 
