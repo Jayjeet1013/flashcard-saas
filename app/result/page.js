@@ -5,7 +5,7 @@ import getStripe from '@/utils/get-stripe'
 import { useSearchParams } from 'next/navigation'
 import { CircularProgress, Typography, Container, Box } from '@mui/material'
 
-const resultPage = () => {
+const ResultPage = () => {
     const router  = useRouter()
     const searchParams = useSearchParams()
     const session_id = searchParams.get('session_id')
@@ -74,4 +74,4 @@ const resultPage = () => {
 )}
 
 
-export default resultPage;
+export default ResultPage;
