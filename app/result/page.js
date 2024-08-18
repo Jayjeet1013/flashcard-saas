@@ -3,7 +3,7 @@ import {useEffect, useState} from 'react'
 import {useRouter} from 'next/navigation'
 import getStripe from '@/utils/get-stripe'
 import { useSearchParams } from 'next/navigation'
-import { CircularProgress, Typography, Container, Box } from '@mui/material'
+import { CircularProgress, Typography, Container, Box, Button } from '@mui/material'
 
 const ResultPage = () => {
     const router  = useRouter()
@@ -62,12 +62,17 @@ const ResultPage = () => {
                 </>
             ) : (
                 <>
-                    <Typography variant="h4">
-                        Payment failed.
-                    </Typography>
-                    <Box sx={{mt:2}}>
-                        <Typography variant="body1"> Your payment was not successful. Please try again. </Typography>
-                    </Box>
+                    <div>    
+                        <Typography variant="h3">
+                            Payment failed.
+                        </Typography>
+                        <Box sx={{mt:2}}>
+                            <Typography variant="body1"> Your payment was not successful. Please try again. </Typography>
+                        </Box>
+                    </div>
+                    <Button sx={{mt:2}}variant="contained" onClick={() => router.push('/')}>
+                        Back to Main Page
+                    </Button>
                 </>
             )}
         </Container>
