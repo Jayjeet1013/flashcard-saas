@@ -1,3 +1,4 @@
+import Header from '@/app/components/header'
 import { SignUp } from '@clerk/nextjs'
 import { Box } from '@mui/material'
 
@@ -12,6 +13,7 @@ export default function Page() {
             alignItems: "center"
         }}
     >
+        <Header />
         <SignUp />
     </Box>
   )

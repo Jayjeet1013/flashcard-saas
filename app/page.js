@@ -18,6 +18,7 @@ import FeatureGrid from "./components/featuresGrid";
 import { useRouter } from "next/navigation";
 import PricingGrid from "./components/pricingGrid";
 import FaqSection from "./components/faqSection";
+import Header from "./components/header";
 
 export default function Home() {
   const router = useRouter();
@@ -36,60 +37,9 @@ export default function Home() {
       sx={{ 
         overflowY: "auto", 
         pb: 10,
-        // backgroundImage: "linear-gradient(to top,rgb(58, 58, 58), rgb(30, 30, 30))",
       }}
     >
-      <Head>
-        <title>Flashcard Saas</title>
-      </Head>
-      <AppBar 
-        sx={{ 
-          backgroundColor: "rgb(30 30 30)" 
-        }}
-      >
-        <Toolbar>
-          <Typography variant="h6" flexGrow={1}>
-            Flashcard Saas
-          </Typography>
-          <SignedOut>
-            <Button
-              color="primary"
-              variant="contained"
-              sx={{ 
-                mr: 2,
-                borderRadius: 8,
-              }}
-              onClick={() => router.push("sign-in")}
-            >
-              Login
-            </Button>
-            <Button 
-              color="primary" 
-              variant="contained" 
-              onClick={() => router.push("sign-up")}
-              sx={{
-                borderRadius: 8,
-              }}
-            >
-              Sign up
-            </Button>
-          </SignedOut>
-          <SignedIn>
-            <Button
-              color="primary"
-              variant="contained"
-              onClick={() => router.push("/flashcards")}
-              sx={{
-                borderRadius: 8,
-                mr: 2,
-              }}
-            >
-              Your flashcards
-            </Button>
-            <UserButton />
-          </SignedIn>
-        </Toolbar>
-      </AppBar>
+      <Header />
       <Container maxWidth="lg">
         <Box
           gap={5}

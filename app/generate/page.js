@@ -17,6 +17,7 @@ import {
   DialogContentText,
   DialogContent,
   DialogActions,
+  Divider
 } from "@mui/material";
 import {
   doc,
@@ -26,9 +27,12 @@ import {
   writeBatch,
 } from "firebase/firestore";
 import { db } from "@/firebase";
+import { useRouter } from "next/navigation";
+import Header from "../components/header";
 
 export default function Generate() {
   const { user } = useUser(); // Use the useUser hook to get user information
+  const router = useRouter(); 
   const [text, setText] = useState("");
   const [flashcards, setFlashcards] = useState([]);
   const [setName, setSetName] = useState("");
@@ -74,6 +78,7 @@ export default function Generate() {
 
       alert("Flashcards saved successfully!");
       handleCloseDialog();
+      router.push(`/flashcard?id=${setName}`);
       setSetName("");
     } catch (error) {
       console.error("Error saving flashcards:", error);
@@ -127,35 +132,36 @@ export default function Generate() {
 
   return (
     <Container maxWidth="100%" sx={{ backgroundImage: "linear-gradient(to top,rgb(58, 58, 58), rgb(30, 30, 30))", height: "100vh", overflowY: 'auto' }}>
-      <Container maxWidth="md" sx={{ p: 5 }}>
+      <Header />
+      <Container maxWidth="md" sx={{ p: 5, mt: 10 }}>
         <Box sx={{ color: "white", display: "flex", flexDirection: "column", gap: 2 }}>
           <Typography variant="h4" component="h1" gutterBottom fontWeight="bold">
             Generate Flashcards
           </Typography>
-            <TextField
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              label="Enter text"
-              fullWidth
-              multiline
-              required
-              rows={4}
-              variant="outlined"
-              sx={{ 
-                mb: 2, 
+          <TextField
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            label="Enter text"
+            fullWidth
+            multiline
+            required
+            rows={4}
+            variant="outlined"
+            sx={{ 
+              mb: 2, 
+              color: "white",
+              "& .MuiInputLabel-root": {color: 'white'}, 
+              "& .MuiInputLabel-root.Mui-focused": {color: !textFieldError ? "rgb(21, 101, 192)" : "red"},
+              "& .MuiOutlinedInput-root": { "& > fieldset": { borderColor: "white" }},
+              "&:hover .MuiOutlinedInput-root": { "& > fieldset": { borderColor: !textFieldError ? "rgb(21, 101, 192)": "red" }},
+            }}
+            error={textFieldError}
+            inputProps={{
+              style: { 
                 color: "white",
-                "& .MuiInputLabel-root": {color: 'white'}, 
-                "& .MuiInputLabel-root.Mui-focused": {color: !textFieldError ? "rgb(21, 101, 192)" : "red"},
-                "& .MuiOutlinedInput-root": { "& > fieldset": { borderColor: "white" }},
-                "&:hover .MuiOutlinedInput-root": { "& > fieldset": { borderColor: !textFieldError ? "rgb(21, 101, 192)": "red" }},
-              }}
-              error={textFieldError}
-              inputProps={{
-                style: { 
-                  color: "white",
-                },
-              }}
-            />
+              },
+            }}
+          />
           <Button
             variant="contained"
             color="primary"
@@ -171,6 +177,7 @@ export default function Generate() {
             <Typography variant="h5" component="h2" color="white" sx={{ mb: 3 }}>
               Generated Flashcards
             </Typography>
+            <Divider />
             <Grid container spacing={2}>
               {flashcards.map((flashcard, index) => (
                 <Grid item xs={12} sm={6} md={4} key={index}>
