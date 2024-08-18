@@ -34,8 +34,7 @@ export default function Flashcard() {
         return;
       }
 
-      console.log("Fetching flashcard set for user:", user.id);
-      console.log("Flashcard set ID:", flashcardSetId);
+ 
 
       try {
         // Construct the reference to the specific flashcard set document
@@ -54,7 +53,7 @@ export default function Flashcard() {
           const flashcardSetData = docSnap.data();
           const flashcardsData = flashcardSetData.flashcards || [];
 
-          console.log("Flashcards data:", flashcardsData);
+         
           setFlashcards(flashcardsData);
         } else {
           console.log("No such document!");
@@ -74,7 +73,7 @@ export default function Flashcard() {
   }, [flashcardSetId, user, isLoaded, isSignedIn]);
 
   const handleCardClick = (index) => {
-    console.log("Card clicked with index:", index);
+   
     setFlipped((prev) => ({
       ...prev,
       [index]: !prev[index],

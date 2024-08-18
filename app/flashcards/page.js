@@ -33,7 +33,7 @@ export default function Flashcard() {
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
-        console.log("Firestore data:", docSnap.data()); // Logs the Firestore data
+        
         const sets = docSnap.data().flashcardSets || [];
         setFlashcardSets(sets);
         setLoading(false);
