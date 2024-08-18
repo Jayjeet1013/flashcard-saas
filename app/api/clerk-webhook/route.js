@@ -5,12 +5,6 @@ import { db } from '@/firebase';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
 export default async function handler(req, res) {
   const buf = await buffer(req);
   const sig = req.headers['stripe-signature'];
@@ -18,7 +12,7 @@ export default async function handler(req, res) {
   let event;
 
   try {
-    // Assuming this is a Clerk webhook, not a Stripe webhook
+    // Assuming this is a Clerk webhook
     event = JSON.parse(buf.toString()); // Directly parse the incoming JSON
   } catch (err) {
     console.error(`Webhook Error: ${err.message}`);
