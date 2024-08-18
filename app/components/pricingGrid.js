@@ -1,7 +1,33 @@
+'use client'
 import { Box, Grid, Typography, Button, Divider } from '@mui/material';
 import { pricingDescriptions } from '../../utils/pricingDescriptions';
+import getStripe from '@/utils/get-stripe';
 
-const PricingGridItem = ({ title, price, description, divider }) => {
+const PricingGridItem = ({ title, price, description, fee, divider }) =>  {
+    const selectPlan = async () => {
+        const checkoutSession = await fetch("/api/checkout_sessions", {
+            method: "POST",
+            headers: {
+                "origin": "localhost:3000",
+                "fee": fee,
+            },
+        });
+        const checkoutSessionJson = await checkoutSession.json();
+
+        if (checkoutSession.statusCode == 500) {
+            console.error(checkoutSession.message);
+            return
+        }
+
+        const stripe = await getStripe();
+        const { error } = await stripe.redirectToCheckout({
+            sessionId: checkoutSessionJson.id,
+        })
+
+        if (error) {
+            console.warn(error.message);
+        }
+    }
     return (
         <Grid item xs={12} md={4} lg={4} sx={{ display: "flex", textAlign: "center", color: "white" }}>
             <Box
@@ -22,7 +48,7 @@ const PricingGridItem = ({ title, price, description, divider }) => {
             <Divider color="#5c84f8"/>
             <Typography variant="body1">{price}</Typography>
             <Typography>{description}</Typography>
-            <Button variant="contained" size='sm'>Choose {title}</Button>
+            <Button variant="contained" size='sm' onClick={selectPlan}>Choose {title}</Button>
             </Box>
         </Grid>
     )
@@ -34,7 +60,7 @@ const PricingGrid = () => {
             <Typography variant="h4" sx={{ mb: 4, color: "white", fontWeight: "bold" }}>Pricing</Typography>
             <Grid container spacing={2}>
                 {pricingDescriptions.map(pricing => (
-                    <PricingGridItem key={pricing.title} {...pricing}/>
+                    <PricingGridItem key={pricing.title} fee={pricing.fee} {...pricing}/>
                 ))}
             </Grid>
         </Box>
