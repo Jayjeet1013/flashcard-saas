@@ -43,7 +43,8 @@ export default function Flashcard() {
           db,
           "users",
           user.id,
-          "flashcardSets"
+          "flashcardSets", 
+          search
         );
 
         console.log("Collection reference:", flashcardSetsRef.path);
@@ -58,6 +59,7 @@ export default function Flashcard() {
 
         // Filter for the specific flashcard set and extract flashcards
         const flashcardsData = docs.docs
+          .filter((doc) => doc.data().setName === search)
           .map((doc) => doc.data().flashcards || ['']) // Get flashcards array from each set
           .flat() // Flatten the array of arrays
           .filter((flashcard) => flashcard.front && flashcard.back); // Ensure valid flashcards
