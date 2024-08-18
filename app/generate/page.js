@@ -43,8 +43,8 @@ export default function Generate() {
 
   const checkSubscriptionStatus = async (userId) => {
     try {
-      // Fetch the user's Stripe customer ID from database
-      const userDocRef = doc(collection(db, "users"), userId, "stripeCustomerId", "IdObject");
+      // Fetch the user's document from the "users" collection
+      const userDocRef = doc(db, "users", userId); // Reference to the user document
       const userDocSnap = await getDoc(userDocRef);
   
       if (!userDocSnap.exists()) {
@@ -52,16 +52,16 @@ export default function Generate() {
       }
   
       const userData = userDocSnap.data();
-      const customerId = userData.Id;
+      const customerId = userData.stripeCustomerId; // Assuming you stored the Stripe customer ID directly
   
       // Call backend to check the subscription status
       const response = await fetch(`/api/check-subscription?customerId=${customerId}`);
       const data = await response.json();
   
-      return data.isSubscribed;
-    } catch (error) {
-      console.error("Error checking subscription status:", error);
-      return false; // Default to false if error
+      return data.isSubscribed; // Return subscription status
+      } catch (error) {
+        console.error("Error checking subscription status:", error);
+      return false; // Default to false if there's an error
     }
   };
   
