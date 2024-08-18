@@ -8,6 +8,14 @@ const formatAmountForStripe = (amount, currency) => {
 }
 
 export async function POST(req) {
+    const fee = formatAmountForStripe(req.headers.get('fee'), 'usd')
+    if (fee == 1000){
+        var product_name = 'Pro Subscription'
+    } else if (fee == 500){
+        var product_name  = 'Basic Subscription'
+    } else {
+        var product_name = 'Free Trial'
+    }
     try {
         const params = {
             mode: 'subscription',
@@ -17,9 +25,9 @@ export async function POST(req) {
                 price_data: {
                     currency: 'usd',
                     product_data: {
-                        name: 'Pro Subscription',
+                        name: product_name,
                     },
-                    unit_amount: formatAmountForStripe(req.headers.get('fee'), 'usd'),
+                    unit_amount: fee,
                     recurring: {interval: 'month', interval_count: 1},
                 },
                 quantity: 1,

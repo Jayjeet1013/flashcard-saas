@@ -1,6 +1,4 @@
 "use client";
-
-
 import { useUser } from "@clerk/nextjs";
 import { useState } from "react";
 import {
@@ -43,6 +41,30 @@ export default function Generate() {
   const handleOpenDialog = () => setDialogOpen(true);
   const handleCloseDialog = () => setDialogOpen(false);
 
+  const checkSubscriptionStatus = async (userId) => {
+    try {
+      // Fetch the user's Stripe customer ID from database
+      const userDocRef = doc(collection(db, "users"), userId);
+      const userDocSnap = await getDoc(userDocRef);
+  
+      if (!userDocSnap.exists()) {
+        throw new Error("User not found in the database.");
+      }
+  
+      const userData = userDocSnap.data();
+      const customerId = userData.stripeCustomerId;
+  
+      // Call backend to check the subscription status
+      const response = await fetch(`/api/check-subscription?customerId=${customerId}`);
+      const data = await response.json();
+  
+      return data.isSubscribed;
+    } catch (error) {
+      console.error("Error checking subscription status:", error);
+      return false; // Default to false if error
+    }
+  };
+  
   const saveFlashcards = async () => {
     if (!setName.trim()) {
       alert("Please enter a name for your flashcard set.");
@@ -95,7 +117,11 @@ export default function Generate() {
      setTextFieldError(true);
      return;
    }
-
+   const isSubscribed = await checkSubscriptionStatus(user.id);
+   if (!isSubscribed) {
+    alert("You need an active subscription to generate flashcards.");
+    return; // Prevent further execution
+  }
    try {
      const response = await fetch("/api/generate", {
        method: "POST",

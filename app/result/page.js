@@ -4,6 +4,7 @@ import {useRouter} from 'next/navigation'
 import getStripe from '@/utils/get-stripe'
 import { useSearchParams } from 'next/navigation'
 import { CircularProgress, Typography, Container, Box, Button } from '@mui/material'
+import { useUser } from '@clerk/nextjs'
 
 const ResultPage = () => {
     const router  = useRouter()
