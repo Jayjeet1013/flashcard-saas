@@ -18,15 +18,16 @@ export default async function handler(req, res) {
   let event;
 
   try {
-    event = stripe.webhooks.constructEvent(buf, sig, process.env.STRIPE_WEBHOOK_SECRET);
+    // Assuming this is a Clerk webhook, not a Stripe webhook
+    event = JSON.parse(buf.toString()); // Directly parse the incoming JSON
   } catch (err) {
     console.error(`Webhook Error: ${err.message}`);
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
-  // Handle the user.created event
+  // Handle user.created event from Clerk
   if (event.type === 'user.created') {
-    const userId = event.data.id; // Clerk's user ID
+    const userId = event.data.id; // Clerk user ID
     const email = event.data.email; // User's email
 
     // Create a Stripe customer
@@ -37,12 +38,15 @@ export default async function handler(req, res) {
       },
     });
 
-    // Here you would save the customer.id to your database linked to the user's Clerk ID
-    await setDoc(doc(db, 'users', userId), {
-        stripeCustomerId: customer.id,
-      }, { merge: true });
+    // Save customer.id to your Firestore database under the user's document
+    const userDocRef = doc(db, "users",  userId, "stripeCustomerId", "IdObject"); // Reference to the user document
+    await setDoc(userDocRef, {
+      Id: customer.id, // Save the Stripe customer ID
+    }, { merge: true });
+
     console.log(`Stripe customer created: ${customer.id}`);
   }
+
   res.status(200).json({ received: true });
 }
 
