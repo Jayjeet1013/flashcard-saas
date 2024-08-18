@@ -78,7 +78,7 @@ export default function Generate() {
 
       alert("Flashcards saved successfully!");
       handleCloseDialog();
-      router.push(`/flashcard?id=${setName}`);
+      router.push(`/flashcards`);
       setSetName("");
     } catch (error) {
       console.error("Error saving flashcards:", error);
