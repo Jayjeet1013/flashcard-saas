@@ -5,18 +5,20 @@ import { db } from '@/firebase';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-export default async function handler(req, res) {
-  const buf = await buffer(req);
+export async function POST(req) {
+  // const buf = await buffer(req);
   const sig = req.headers['stripe-signature'];
+
+  console.log(req);
 
   let event;
 
   try {
     // Assuming this is a Clerk webhook
-    event = JSON.parse(buf.toString()); // Directly parse the incoming JSON
+    event = await req.json(); // Directly parse the incoming JSON
   } catch (err) {
     console.error(`Webhook Error: ${err.message}`);
-    return res.status(400).send(`Webhook Error: ${err.message}`);
+    return new Response(`Webhook Error: ${err.message}`, { status: 404 });
   }
 
   // Handle user.created event from Clerk
@@ -41,7 +43,7 @@ export default async function handler(req, res) {
     console.log(`Stripe customer created: ${customer.id}`);
   }
 
-  res.status(200).json({ received: true });
+  return new Response(null, { status: 200 });
 }
 
 // Helper function to parse the request body
