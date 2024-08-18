@@ -39,7 +39,7 @@ export default async function handler(req, res) {
     });
 
     // Save customer.id to your Firestore database under the user's document
-    const userDocRef = doc(db, "users",  userId, userId); // Reference to the user document
+    const userDocRef = doc(db, "users",  userId); // Reference to the user document
     await setDoc(userDocRef, {
         stripeCustomerId: customer.id, // Save the Stripe customer ID
     }, { merge: true });
