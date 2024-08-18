@@ -35,21 +35,21 @@ const ResultPage = () => {
     }, [session_id])
     if (loading) {
         return(
-            <Container maxwidth="100vw" sx={{textAlign: 'center', mt: 4}}>
+            <Container maxwidth="100vw" sx={{display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: 'center', mt: 4, height: "100vh", mt: 0 }}>
                 <CircularProgress />
-                <Typography variant="h6">Loading...</Typography>
+                <Typography variant="h6" sx={{ mt: 2 }}>Loading...</Typography>
             </Container>
         )
     }
     if (error) {
         return(
-            <Container maxwidth="100vw" sx={{textAlign: 'center', mt: 4}}>
+            <Container maxwidth="100vw" sx={{display: "flex", justifyContent: "center", alignItems: "center", textAlign: 'center', mt: 4, height: "100vh", mt: 0 }}>
                 <Typography variant="h6">Error: {error}</Typography>
             </Container>
         )
     }
     return (
-        <Container maxwidth="100vw" sx={{textAlign: 'center', mt: 4}}>
+        <Container maxwidth="100vw" sx={{textAlign: 'center', mt: 4, height: "100vh", overflowY: 'auto', mt: 0, p: 10 }}>
             {session.payment_status === 'paid' ? (
                 <>
                     <Typography variant="h4">
