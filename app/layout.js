@@ -7,7 +7,7 @@ import { Analytics } from "@vercel/analytics/react";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "FlashCard AI",
+  title: "FlashLoom",
   description: "Use to generate Flashcards",
 };
 
@@ -16,7 +16,7 @@ export default function RootLayout({ children }) {
     <ClerkProvider>
       <html lang="en">
         <Head>
-          <title>Flashcard Saas</title>
+          <title>FlashLoom</title>
         </Head>
         <body className={inter.className}>
           {children}

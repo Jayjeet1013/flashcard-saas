@@ -8,16 +8,16 @@ const Header = () => {
 
     const router = useRouter(); 
     return (
-    <AppBar 
-        sx={{ 
+      <AppBar
+        sx={{
           backgroundColor: "rgb(30 30 30)",
-          mb: 10
+          mb: 10,
         }}
       >
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
           <Button onClick={() => router.push("/")}>
             <Typography variant="h6" color="white">
-              Flashcard Saas
+              FlashLoom
             </Typography>
           </Button>
           <SignedOut>
@@ -25,7 +25,7 @@ const Header = () => {
               <Button
                 color="primary"
                 variant="contained"
-                sx={{ 
+                sx={{
                   mr: 2,
                   borderRadius: 8,
                 }}
@@ -33,9 +33,9 @@ const Header = () => {
               >
                 Login
               </Button>
-              <Button 
-                color="primary" 
-                variant="contained" 
+              <Button
+                color="primary"
+                variant="contained"
                 onClick={() => router.push("sign-up")}
                 sx={{
                   borderRadius: 8,
@@ -63,7 +63,7 @@ const Header = () => {
           </SignedIn>
         </Toolbar>
       </AppBar>
-    )
+    );
 }
 
 export default Header; 
