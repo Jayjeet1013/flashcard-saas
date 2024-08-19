@@ -117,11 +117,11 @@ export default function Generate() {
      setTextFieldError(true);
      return;
    }
-  //  const isSubscribed = await checkSubscriptionStatus(user.id);
-  //  if (!isSubscribed) {
-  //   alert("You need an active subscription to generate flashcards.");
-  //   return; // Prevent further execution
-  // }
+   const isSubscribed = await checkSubscriptionStatus(user.id);
+   if (!isSubscribed) {
+    alert("You need an active subscription to generate flashcards.");
+    return; // Prevent further execution
+  }
    try {
      const response = await fetch("/api/generate", {
        method: "POST",

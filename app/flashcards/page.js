@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { doc, collection, getDoc, setDoc } from "firebase/firestore";
-import { db } from "@/firebase";
+import { db } from "@/firebase.js";
 import Header from "../components/header";
 
 export default function Flashcard() {

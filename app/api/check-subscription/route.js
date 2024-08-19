@@ -2,11 +2,13 @@ import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-export default async function handler(req, res) {
-  const { customerId } = req.query;
+export async function GET(req) {
+  const { searchParams } = new URL(req.url);
+  const customerId = searchParams.get('customerId');
 
   if (!customerId) {
-    return res.status(400).json({ error: "Customer ID is required." });
+    console.log("Customer ID is required.");
+    return new Response(JSON.stringify({ error: "Customer ID is required." }), { status: 400 });
   }
 
   try {
@@ -19,9 +21,9 @@ export default async function handler(req, res) {
     // Check if there are any active subscriptions
     const isSubscribed = subscriptions.data.length > 0;
 
-    return res.status(200).json({ isSubscribed });
+    return new Response(JSON.stringify({ isSubscribed }), { status: 200, headers: { 'Content-Type': 'application/json' } });
   } catch (error) {
     console.error("Error retrieving subscription status:", error);
-    return res.status(500).json({ error: "Failed to retrieve subscription status." });
+    return new Response(JSON.stringify({ error: "Failed to retrieve subscription status." }), { status: 500 });
   }
 }

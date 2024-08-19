@@ -15,7 +15,7 @@ import {
   Divider,
 } from "@mui/material";
 import { doc, getDoc } from "firebase/firestore";
-import { db } from "@/firebase";
+import { db } from "@/firebase.js";
 import Header from "../components/header";
 
 export default function Flashcard() {
