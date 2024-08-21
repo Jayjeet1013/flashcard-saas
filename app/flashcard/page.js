@@ -81,9 +81,13 @@ export default function Flashcard() {
   };
 
   return (
-    <Container maxWidth="md" sx={{ height: "100vh", overflowY: "auto" }}>
+    <Container maxWidth="md"  sx={{paddingBottom:'100px', height: "100vh", overflowY: "auto" }}>
       <Header />
-      <Typography variant="h4" fontWeight="bold" sx={{ mt: 15 }}>
+      <Typography
+        variant="h4"
+        fontWeight="bold"
+        sx={{ mt: 15, textTransform: "uppercase" }}
+      >
         {flashcardSetId}
       </Typography>
       <Divider color="white" sx={{ mt: 3 }} />
@@ -99,7 +103,7 @@ export default function Flashcard() {
           <CircularProgress />
         </Box>
       ) : (
-        <Grid container spacing={3} sx={{ mt: 2 }}>
+        <Grid container spacing={2} sx={{ mt: 2 }}>
           {flashcards.length > 0 ? (
             flashcards.map((flashcard, index) => (
               <Grid item xs={12} sm={6} md={4} key={index}>
@@ -110,7 +114,7 @@ export default function Flashcard() {
                         sx={{
                           position: "relative",
                           width: "100%",
-                          height: "150px",
+                          height: "240px",
                           perspective: "1000px",
                         }}
                       >

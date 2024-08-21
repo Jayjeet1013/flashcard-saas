@@ -19,6 +19,7 @@ import { useRouter } from "next/navigation";
 import PricingGrid from "./components/pricingGrid";
 import FaqSection from "./components/faqSection";
 import Header from "./components/header";
+import { motion } from "framer-motion";
 
 export default function Home() {
   const router = useRouter();
@@ -31,12 +32,16 @@ export default function Home() {
       router.push("/sign-up"); // Redirect to Sign-up page if not signed in
     }
   };
+
   return (
     <Container
       maxWidth="100%"
       sx={{
         overflowY: "auto",
         pb: 10,
+        pt: 6,
+        backgroundColor: "#121212", // Dark background for the entire page
+        color: "white", // Default text color
       }}
     >
       <Header />
@@ -51,32 +56,43 @@ export default function Home() {
             mt: 10,
           }}
         >
-          <Box sx={{ textAlign: "center", p: 5, pb: 0 }}>
-            <Typography variant="h3" color={"white"} fontWeight="700">
+          <div style={{ textAlign: "center" }}>
+            <Typography variant="h3" fontWeight="700">
               Welcome to FlashLoom
             </Typography>
-            <Typography
-              variant="h6"
-              fontWeight="bold"
-              sx={{ m: 3, color: "white" }}
-            >
+            <Typography variant="h6" fontWeight="bold" sx={{ m: 3 }}>
               Revolutionize your learning experience with our innovative
               AI-curated interactive flashcards, designed to elevate your
               knowledge retention and engagement!
             </Typography>
+          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            style={{ textAlign: "center" }}
+          >
             <Button
               variant="contained"
-              sx={{ borderRadius: 5 }}
+              sx={{
+                borderRadius: 5,
+                backgroundColor: "#5c84f8",
+                "&:hover": {
+                  backgroundColor: "#4a6abf",
+                },
+              }}
               onClick={handleGetStartedClick}
             >
               Get Started
             </Button>
-          </Box>
-          <Divider color="white" />
+          </motion.div>
+          <Divider sx={{ borderColor: "white" }} />
           <FeatureGrid />
-          <Divider color="white" />
+          <Divider sx={{ borderColor: "white" }} />
           <PricingGrid />
-          <Divider color="white" />
+          <Divider sx={{ borderColor: "white" }} />
           <FaqSection />
         </Box>
       </Container>

@@ -117,11 +117,11 @@ export default function Generate() {
      setTextFieldError(true);
      return;
    }
-   const isSubscribed = await checkSubscriptionStatus(user.id);
-   if (!isSubscribed) {
-    alert("You need an active subscription to generate flashcards.");
-    return; // Prevent further execution
-  }
+  //  const isSubscribed = await checkSubscriptionStatus(user.id);
+  //  if (!isSubscribed) {
+  //   alert("You need an active subscription to generate flashcards.");
+  //   return; // Prevent further execution
+  // }
    try {
      const response = await fetch("/api/generate", {
        method: "POST",
@@ -208,7 +208,7 @@ export default function Generate() {
               {flashcards.map((flashcard, index) => (
                 <Grid item xs={12} sm={6} md={4} key={index}>
                   <Card
-                    className="card-container"
+                    className="card-container h-[240px]  "
                     onClick={() => handleCardClick(index)}
                   >
                     <div
@@ -216,7 +216,7 @@ export default function Generate() {
                         flippedIndex === index ? "flipped" : ""
                       }`}
                     >
-                      <div className="card-face card-front">
+                      <div className="card-face  card-front">
                         <CardContent>
                           {/* <Typography variant="h6">Front:</Typography> */}
                           <Typography variant="h6">{flashcard.front}</Typography>

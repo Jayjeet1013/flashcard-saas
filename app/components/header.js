@@ -53,7 +53,7 @@ const Header = () => {
                 onClick={() => router.push("/flashcards")}
                 sx={{
                   borderRadius: 8,
-                  mr: 2,
+                  mr: { xs: 0, sm: 2 },
                 }}
               >
                 Your flashcards
