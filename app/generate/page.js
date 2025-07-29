@@ -15,7 +15,7 @@ import {
   DialogContentText,
   DialogContent,
   DialogActions,
-  Divider
+  Divider,
 } from "@mui/material";
 import {
   doc,
@@ -27,10 +27,11 @@ import {
 import { db } from "@/firebase";
 import { useRouter } from "next/navigation";
 import Header from "../components/header";
+import { motion } from "framer-motion";
 
 export default function Generate() {
-  const { user } = useUser(); 
-  const router = useRouter(); 
+  const { user } = useUser();
+  const router = useRouter();
   const [text, setText] = useState("");
   const [flashcards, setFlashcards] = useState([]);
   const [setName, setSetName] = useState("");
@@ -46,25 +47,27 @@ export default function Generate() {
       // Fetch the user's document from the "users" collection
       const userDocRef = doc(db, "users", userId); // Reference to the user document
       const userDocSnap = await getDoc(userDocRef);
-  
+
       if (!userDocSnap.exists()) {
         throw new Error("User not found in the database.");
       }
-  
+
       const userData = userDocSnap.data();
       const customerId = userData.stripeCustomerId; // Assuming you stored the Stripe customer ID directly
-  
+
       // Call backend to check the subscription status
-      const response = await fetch(`/api/check-subscription?customerId=${customerId}`);
+      const response = await fetch(
+        `/api/check-subscription?customerId=${customerId}`
+      );
       const data = await response.json();
-  
+
       return data.isSubscribed; // Return subscription status
-      } catch (error) {
-        console.error("Error checking subscription status:", error);
+    } catch (error) {
+      console.error("Error checking subscription status:", error);
       return false; // Default to false if there's an error
     }
   };
-  
+
   const saveFlashcards = async () => {
     if (!setName.trim()) {
       alert("Please enter a name for your flashcard set.");
@@ -108,151 +111,384 @@ export default function Generate() {
     }
   };
 
- const handleSubmit = async () => {
+  const handleSubmit = async () => {
+    setTextFieldError(false);
 
-  setTextFieldError(false);
+    if (!text.trim()) {
+      alert("Please enter some text to generate flashcards.");
+      setTextFieldError(true);
+      return;
+    }
+    //  const isSubscribed = await checkSubscriptionStatus(user.id);
+    //  if (!isSubscribed) {
+    //   alert("You need an active subscription to generate flashcards.");
+    //   return; // Prevent further execution
+    // }
+    try {
+      const response = await fetch("/api/generate", {
+        method: "POST",
+        body: JSON.stringify({ message: text }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-   if (!text.trim()) {
-     alert("Please enter some text to generate flashcards.");
-     setTextFieldError(true);
-     return;
-   }
-  //  const isSubscribed = await checkSubscriptionStatus(user.id);
-  //  if (!isSubscribed) {
-  //   alert("You need an active subscription to generate flashcards.");
-  //   return; // Prevent further execution
-  // }
-   try {
-     const response = await fetch("/api/generate", {
-       method: "POST",
-       body: JSON.stringify({ message: text }),
-       headers: {
-         "Content-Type": "application/json",
-       },
-     });
+      if (!response.ok) {
+        throw new Error("Failed to generate flashcards");
+      }
 
-     if (!response.ok) {
-       throw new Error("Failed to generate flashcards");
-     }
+      const data = await response.json();
+      console.log("Generated flashcards:", data);
 
-     const data = await response.json();
-     console.log("Generated flashcards:", data); 
-
-     if (data.flashcards) {
-       setFlashcards(data.flashcards);
-       setText("");
-     } else {
-       console.error("Unexpected response format:", data);
-       alert("An error occurred. Please try again.");
-     }
-   } catch (error) {
-     console.error("Error generating flashcards:", error);
-     alert("Please try again.");
-   }
- };
-
+      if (data.flashcards) {
+        setFlashcards(data.flashcards);
+        setText("");
+      } else {
+        console.error("Unexpected response format:", data);
+        alert("An error occurred. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error generating flashcards:", error);
+      alert("Please try again.");
+    }
+  };
 
   const handleCardClick = (index) => {
     setFlippedIndex(flippedIndex === index ? null : index);
   };
 
   return (
-    <Container maxWidth="100%" sx={{ backgroundImage: "linear-gradient(to top,rgb(58, 58, 58), rgb(30, 30, 30))", height: "100vh", overflowY: 'auto' }}>
+    <Container
+      maxWidth="100%"
+      sx={{
+        background:
+          "linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 30%, #16213e 70%, #0f3460 100%)",
+        minHeight: "100vh",
+        overflowY: "auto",
+        position: "relative",
+        "&::before": {
+          content: '""',
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background:
+            "radial-gradient(ellipse at center, rgba(92, 132, 248, 0.05) 0%, transparent 70%)",
+          pointerEvents: "none",
+        },
+      }}
+    >
       <Header />
-      <Container maxWidth="md" sx={{ p: 5, mt: 10 }}>
-        <Box sx={{ color: "white", display: "flex", flexDirection: "column", gap: 2 }}>
-          <Typography variant="h4" component="h1" gutterBottom fontWeight="bold">
-            Generate Flashcards
-          </Typography>
-          <TextField
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            label="Enter text"
-            fullWidth
-            multiline
-            required
-            rows={4}
-            variant="outlined"
-            sx={{ 
-              mb: 2, 
-              color: "white",
-              "& .MuiInputLabel-root": {color: 'white'}, 
-              "& .MuiInputLabel-root.Mui-focused": {color: !textFieldError ? "rgb(21, 101, 192)" : "red"},
-              "& .MuiOutlinedInput-root": { "& > fieldset": { borderColor: "white" }},
-              "&:hover .MuiOutlinedInput-root": { "& > fieldset": { borderColor: !textFieldError ? "rgb(21, 101, 192)": "red" }},
+      <Container
+        maxWidth="lg"
+        sx={{
+          p: { xs: 2, sm: 4, md: 5 },
+          mt: { xs: 8, sm: 10, md: 12 },
+          position: "relative",
+          zIndex: 1,
+        }}
+      >
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <Box sx={{ color: "white", mb: 6 }}>
+            <Typography
+              variant="h3"
+              component="h1"
+              sx={{
+                fontWeight: 800,
+                fontSize: { xs: "2rem", sm: "2.5rem", md: "3rem" },
+                background:
+                  "linear-gradient(135deg, #5c84f8 0%, #4f46e5 50%, #7c3aed 100%)",
+                backgroundClip: "text",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                mb: 2,
+                textAlign: "center",
+              }}
+            >
+              Generate Flashcards
+            </Typography>
+            <Typography
+              variant="h6"
+              sx={{
+                color: "rgba(255, 255, 255, 0.7)",
+                textAlign: "center",
+                maxWidth: 600,
+                mx: "auto",
+                lineHeight: 1.6,
+              }}
+            >
+              Transform your study material into interactive flashcards with AI
+            </Typography>
+          </Box>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          <Box
+            sx={{
+              p: 4,
+              background:
+                "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)",
+              border: "1px solid rgba(92, 132, 248, 0.2)",
+              borderRadius: 4,
+              boxShadow: "0 15px 35px rgba(0, 0, 0, 0.3)",
+              mb: 4,
             }}
-            error={textFieldError}
-            inputProps={{
-              style: { 
-                color: "white",
-              },
-            }}
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleSubmit}
-            fullWidth
           >
-            Generate Flashcards
-          </Button>
-        </Box>
+            <TextField
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              placeholder="Paste your study material, notes, or any text you want to convert into flashcards..."
+              fullWidth
+              multiline
+              required
+              rows={6}
+              variant="outlined"
+              sx={{
+                mb: 3,
+                "& .MuiInputLabel-root": { color: "rgba(255, 255, 255, 0.7)" },
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: !textFieldError ? "#5c84f8" : "#f44336",
+                },
+                "& .MuiOutlinedInput-root": {
+                  "& > fieldset": {
+                    borderColor: "rgba(92, 132, 248, 0.3)",
+                    borderWidth: 2,
+                  },
+                  "&:hover > fieldset": {
+                    borderColor: !textFieldError ? "#5c84f8" : "#f44336",
+                  },
+                  "&.Mui-focused > fieldset": {
+                    borderColor: !textFieldError ? "#5c84f8" : "#f44336",
+                  },
+                  background: "rgba(0, 0, 0, 0.2)",
+                  borderRadius: 3,
+                },
+              }}
+              error={textFieldError}
+              inputProps={{
+                style: {
+                  color: "white",
+                  fontSize: "1rem",
+                  lineHeight: 1.6,
+                },
+              }}
+            />
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Button
+                variant="contained"
+                size="large"
+                onClick={handleSubmit}
+                fullWidth
+                sx={{
+                  py: 2,
+                  borderRadius: 3,
+                  background:
+                    "linear-gradient(135deg, #5c84f8 0%, #4f46e5 100%)",
+                  fontSize: "1.1rem",
+                  fontWeight: 600,
+                  boxShadow: "0 10px 30px rgba(92, 132, 248, 0.4)",
+                  transition: "all 0.3s ease",
+                  "&:hover": {
+                    background:
+                      "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
+                    boxShadow: "0 15px 40px rgba(92, 132, 248, 0.6)",
+                  },
+                }}
+              >
+                Generate Flashcards with AI ✨
+              </Button>
+            </motion.div>
+          </Box>
+        </motion.div>
 
         {flashcards.length > 0 && (
-          <Box sx={{ mt: 4 }}>
-            <Typography variant="h5" component="h2" color="white" sx={{ mb: 3 }}>
-              Generated Flashcards
-            </Typography>
-            <Divider />
-            <Grid container spacing={2}>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <Box sx={{ mb: 4 }}>
+              <Typography
+                variant="h4"
+                component="h2"
+                sx={{
+                  color: "white",
+                  fontWeight: 700,
+                  mb: 1,
+                  textAlign: "center",
+                }}
+              >
+                Your Flashcards
+              </Typography>
+              <Typography
+                sx={{
+                  color: "rgba(255, 255, 255, 0.7)",
+                  textAlign: "center",
+                  mb: 4,
+                }}
+              >
+                Click on any card to flip it and see the answer
+              </Typography>
+
+              <Box
+                sx={{
+                  width: 80,
+                  height: 4,
+                  background:
+                    "linear-gradient(135deg, #5c84f8 0%, #4f46e5 100%)",
+                  borderRadius: 2,
+                  mx: "auto",
+                  mb: 4,
+                }}
+              />
+            </Box>
+
+            <Grid container spacing={3}>
               {flashcards.map((flashcard, index) => (
-                <Grid item xs={12} sm={6} md={4} key={index}>
-                  <Card
-                    className="card-container h-[240px]  "
-                    onClick={() => handleCardClick(index)}
+                <Grid item xs={12} sm={6} lg={4} key={index}>
+                  <motion.div
+                    initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    whileHover={{ y: -5 }}
                   >
-                    <div
-                      className={`card ${
-                        flippedIndex === index ? "flipped" : ""
-                      }`}
+                    <Card
+                      className="card-container"
+                      onClick={() => handleCardClick(index)}
+                      sx={{
+                        height: 250,
+                        cursor: "pointer",
+                        transition: "all 0.3s ease",
+                        "&:hover": {
+                          transform: "translateY(-5px)",
+                          boxShadow: "0 20px 40px rgba(92, 132, 248, 0.2)",
+                        },
+                      }}
                     >
-                      <div className="card-face  card-front">
-                        <CardContent>
-                          {/* <Typography variant="h6">Front:</Typography> */}
-                          <Typography variant="h6">{flashcard.front}</Typography>
-                        </CardContent>
+                      <div
+                        className={`card ${
+                          flippedIndex === index ? "flipped" : ""
+                        }`}
+                      >
+                        <div className="card-front">
+                          <CardContent
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              textAlign: "center",
+                              height: "100%",
+                              p: 3,
+                            }}
+                          >
+                            <Typography
+                              variant="h6"
+                              sx={{
+                                color: "white",
+                                lineHeight: 1.4,
+                                fontWeight: 500,
+                              }}
+                            >
+                              {flashcard.front}
+                            </Typography>
+                          </CardContent>
+                        </div>
+                        <div className="card-back">
+                          <CardContent
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              textAlign: "center",
+                              height: "100%",
+                              p: 3,
+                            }}
+                          >
+                            <Typography
+                              variant="h6"
+                              sx={{
+                                color: "white",
+                                lineHeight: 1.4,
+                                fontWeight: 500,
+                              }}
+                            >
+                              {flashcard.back}
+                            </Typography>
+                          </CardContent>
+                        </div>
                       </div>
-                      <div className="card-face card-back">
-                        <CardContent>
-                          {/* <Typography variant="h6">Back:</Typography> */}
-                          <Typography variant="h6">{flashcard.back}</Typography>
-                        </CardContent>
-                      </div>
-                    </div>
-                  </Card>
+                    </Card>
+                  </motion.div>
                 </Grid>
               ))}
             </Grid>
-          </Box>
+          </motion.div>
         )}
 
         {flashcards.length > 0 && (
-          <Box sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleOpenDialog}
-            >
-              Save Flashcards
-            </Button>
-          </Box>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
+            <Box sx={{ mt: 6, display: "flex", justifyContent: "center" }}>
+              <Button
+                variant="contained"
+                size="large"
+                onClick={handleOpenDialog}
+                sx={{
+                  px: 4,
+                  py: 2,
+                  borderRadius: 3,
+                  background:
+                    "linear-gradient(135deg, #22c55e 0%, #16a34a 100%)",
+                  fontSize: "1.1rem",
+                  fontWeight: 600,
+                  boxShadow: "0 10px 30px rgba(34, 197, 94, 0.4)",
+                  transition: "all 0.3s ease",
+                  "&:hover": {
+                    background:
+                      "linear-gradient(135deg, #16a34a 0%, #15803d 100%)",
+                    boxShadow: "0 15px 40px rgba(34, 197, 94, 0.6)",
+                    transform: "translateY(-2px)",
+                  },
+                }}
+              >
+                Save Flashcard Set 💾
+              </Button>
+            </Box>
+          </motion.div>
         )}
 
-        <Dialog open={dialogOpen} onClose={handleCloseDialog}>
-          <DialogTitle>Save Flashcard Set</DialogTitle>
+        <Dialog
+          open={dialogOpen}
+          onClose={handleCloseDialog}
+          PaperProps={{
+            sx: {
+              background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)",
+              border: "1px solid rgba(92, 132, 248, 0.2)",
+              borderRadius: 3,
+              boxShadow: "0 25px 50px rgba(0, 0, 0, 0.5)",
+            },
+          }}
+        >
+          <DialogTitle sx={{ color: "white", fontWeight: 600 }}>
+            Save Flashcard Set
+          </DialogTitle>
           <DialogContent>
-            <DialogContentText>
-              Please enter a name for your flashcard set.
+            <DialogContentText
+              sx={{ color: "rgba(255, 255, 255, 0.7)", mb: 2 }}
+            >
+              Give your flashcard set a memorable name to easily find it later.
             </DialogContentText>
             <TextField
               autoFocus
@@ -262,11 +498,52 @@ export default function Generate() {
               fullWidth
               value={setName}
               onChange={(e) => setSetName(e.target.value)}
+              sx={{
+                "& .MuiInputLabel-root": { color: "rgba(255, 255, 255, 0.7)" },
+                "& .MuiInputLabel-root.Mui-focused": { color: "#5c84f8" },
+                "& .MuiOutlinedInput-root": {
+                  "& > fieldset": {
+                    borderColor: "rgba(92, 132, 248, 0.3)",
+                  },
+                  "&:hover > fieldset": {
+                    borderColor: "#5c84f8",
+                  },
+                  "&.Mui-focused > fieldset": {
+                    borderColor: "#5c84f8",
+                  },
+                  background: "rgba(0, 0, 0, 0.2)",
+                },
+              }}
+              inputProps={{
+                style: {
+                  color: "white",
+                },
+              }}
             />
           </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseDialog}>Cancel</Button>
-            <Button onClick={saveFlashcards} color="primary">
+          <DialogActions sx={{ p: 3 }}>
+            <Button
+              onClick={handleCloseDialog}
+              sx={{
+                color: "rgba(255, 255, 255, 0.7)",
+                "&:hover": {
+                  background: "rgba(255, 255, 255, 0.1)",
+                },
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={saveFlashcards}
+              variant="contained"
+              sx={{
+                background: "linear-gradient(135deg, #5c84f8 0%, #4f46e5 100%)",
+                "&:hover": {
+                  background:
+                    "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
+                },
+              }}
+            >
               Save
             </Button>
           </DialogActions>

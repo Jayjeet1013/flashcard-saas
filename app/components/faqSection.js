@@ -139,21 +139,31 @@ const FaqSection = () => {
   return (
     <Box
       sx={{
-        py: { xs: 4, sm: 6, md: 8 },
-        px: { xs: 2, sm: 4, md: 6 },
-        background:
-          "linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%)",
+        py: { xs: 6, sm: 8, md: 10 },
+        px: { xs: 2, sm: 4 },
         position: "relative",
-        overflow: "hidden",
         "&::before": {
           content: '""',
           position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
+          top: "20%",
+          left: "10%",
+          width: 200,
+          height: 200,
+          borderRadius: "50%",
           background:
-            "radial-gradient(circle at 50% 50%, rgba(92, 132, 248, 0.1) 0%, transparent 70%)",
+            "radial-gradient(circle, rgba(92, 132, 248, 0.05) 0%, transparent 70%)",
+          pointerEvents: "none",
+        },
+        "&::after": {
+          content: '""',
+          position: "absolute",
+          bottom: "20%",
+          right: "10%",
+          width: 150,
+          height: 150,
+          borderRadius: "50%",
+          background:
+            "radial-gradient(circle, rgba(124, 58, 237, 0.05) 0%, transparent 70%)",
           pointerEvents: "none",
         },
       }}
@@ -166,7 +176,7 @@ const FaqSection = () => {
         <Box
           sx={{
             textAlign: "center",
-            mb: { xs: 4, sm: 6 },
+            mb: { xs: 6, sm: 8 },
             position: "relative",
             zIndex: 1,
           }}
@@ -216,34 +226,6 @@ const FaqSection = () => {
           <FaqItem key={index} {...faq} index={index} />
         ))}
       </Box>
-
-      {/* Decorative elements */}
-      <Box
-        sx={{
-          position: "absolute",
-          top: "10%",
-          left: "5%",
-          width: 100,
-          height: 100,
-          borderRadius: "50%",
-          background:
-            "radial-gradient(circle, rgba(92, 132, 248, 0.1) 0%, transparent 70%)",
-          pointerEvents: "none",
-        }}
-      />
-      <Box
-        sx={{
-          position: "absolute",
-          bottom: "15%",
-          right: "8%",
-          width: 80,
-          height: 80,
-          borderRadius: "50%",
-          background:
-            "radial-gradient(circle, rgba(124, 58, 237, 0.1) 0%, transparent 70%)",
-          pointerEvents: "none",
-        }}
-      />
     </Box>
   );
 };
