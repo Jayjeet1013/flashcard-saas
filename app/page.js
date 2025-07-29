@@ -16,7 +16,6 @@ import {
 import Head from "next/head";
 import FeatureGrid from "./components/featuresGrid";
 import { useRouter } from "next/navigation";
-import PricingGrid from "./components/pricingGrid";
 import FaqSection from "./components/faqSection";
 import Header from "./components/header";
 import { motion } from "framer-motion";
@@ -235,34 +234,6 @@ export default function Home() {
           </Box>
 
           <FeatureGrid />
-
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              my: { xs: 6, sm: 8 },
-              "&::before, &::after": {
-                content: '""',
-                flex: 1,
-                height: 1,
-                background:
-                  "linear-gradient(90deg, transparent, rgba(92, 132, 248, 0.3), transparent)",
-              },
-            }}
-          >
-            <Box
-              sx={{
-                mx: 4,
-                width: 12,
-                height: 12,
-                borderRadius: "50%",
-                background: "linear-gradient(135deg, #5c84f8 0%, #4f46e5 100%)",
-                boxShadow: "0 0 20px rgba(92, 132, 248, 0.5)",
-              }}
-            />
-          </Box>
-
-          <PricingGrid />
 
           <Box
             sx={{
