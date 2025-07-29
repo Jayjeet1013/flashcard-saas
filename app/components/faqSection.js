@@ -1,36 +1,132 @@
-import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
+import {
+  Box,
+  Typography,
+  useMediaQuery,
+  useTheme,
+  Collapse,
+  IconButton,
+} from "@mui/material";
 import { FAQs } from "../../utils/faqs";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
+import {
+  KeyboardArrowDown,
+  KeyboardArrowUp,
+  HelpOutline,
+} from "@mui/icons-material";
 
-const FaqItem = ({ question, answer }) => {
+const FaqItem = ({ question, answer, index }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const toggleExpand = () => {
+    setIsExpanded(!isExpanded);
+  };
+
   return (
     <motion.div
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      whileHover={{ y: -2 }}
     >
       <Box
         sx={{
-          p: 4,
-          border: "1px solid #333",
-          borderRadius: 3,
-          backgroundColor: "#1e1e1e",
-          boxShadow: "0 8px 24px rgba(0, 0, 0, 0.12)",
-          color: "white",
-          display: "flex",
-          flexDirection: "column",
-          gap: 2,
+          borderRadius: 4,
+          background:
+            "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)",
+          border: "1px solid rgba(92, 132, 248, 0.2)",
+          boxShadow: "0 10px 30px rgba(0, 0, 0, 0.3)",
+          overflow: "hidden",
+          transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
           "&:hover": {
-            backgroundColor: "#292929",
+            border: "1px solid rgba(92, 132, 248, 0.4)",
+            boxShadow: "0 20px 40px rgba(92, 132, 248, 0.1)",
+            transform: "translateY(-2px)",
           },
         }}
       >
-        <Typography variant="h6" fontWeight="bold" sx={{ color: "#5c84f8" }}>
-          {question}
-        </Typography>
-        <Typography>{answer}</Typography>
+        <Box
+          onClick={toggleExpand}
+          sx={{
+            p: 3,
+            display: "flex",
+            alignItems: "center",
+            gap: 2,
+            cursor: "pointer",
+            transition: "all 0.2s ease",
+            "&:hover": {
+              backgroundColor: "rgba(92, 132, 248, 0.05)",
+            },
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: 40,
+              height: 40,
+              borderRadius: "50%",
+              background: "linear-gradient(135deg, #5c84f8 0%, #4f46e5 100%)",
+              boxShadow: "0 4px 12px rgba(92, 132, 248, 0.3)",
+              flexShrink: 0,
+            }}
+          >
+            <HelpOutline sx={{ color: "white", fontSize: 20 }} />
+          </Box>
+
+          <Typography
+            variant="h6"
+            fontWeight="600"
+            sx={{
+              color: "white",
+              flex: 1,
+              fontSize: { xs: "1rem", sm: "1.1rem" },
+              lineHeight: 1.4,
+            }}
+          >
+            {question}
+          </Typography>
+
+          <IconButton
+            sx={{
+              color: "#5c84f8",
+              transition: "transform 0.3s ease",
+              transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)",
+            }}
+          >
+            <KeyboardArrowDown />
+          </IconButton>
+        </Box>
+
+        <Collapse in={isExpanded} timeout={300}>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: isExpanded ? 1 : 0 }}
+            transition={{ duration: 0.2, delay: isExpanded ? 0.1 : 0 }}
+          >
+            <Box
+              sx={{
+                px: 3,
+                pb: 3,
+                pt: 0,
+                borderTop: "1px solid rgba(92, 132, 248, 0.1)",
+                backgroundColor: "rgba(0, 0, 0, 0.2)",
+              }}
+            >
+              <Typography
+                sx={{
+                  color: "rgba(255, 255, 255, 0.9)",
+                  lineHeight: 1.6,
+                  fontSize: "0.95rem",
+                  pl: 6.5, // Align with question text
+                }}
+              >
+                {answer}
+              </Typography>
+            </Box>
+          </motion.div>
+        </Collapse>
       </Box>
     </motion.div>
   );
@@ -43,27 +139,111 @@ const FaqSection = () => {
   return (
     <Box
       sx={{
-        display: "flex",
-        flexDirection: "column",
-        gap: 3,
-        px: isSmallScreen ? 2 : 5,
-        py: 5,
-        backgroundColor: "#121212",
-        borderRadius: 4,
+        py: { xs: 4, sm: 6, md: 8 },
+        px: { xs: 2, sm: 4, md: 6 },
+        background:
+          "linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%)",
+        position: "relative",
+        overflow: "hidden",
+        "&::before": {
+          content: '""',
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background:
+            "radial-gradient(circle at 50% 50%, rgba(92, 132, 248, 0.1) 0%, transparent 70%)",
+          pointerEvents: "none",
+        },
       }}
     >
-      <Typography
-        variant="h4"
-        color="#5c84f8"
-        fontWeight="bold"
-        textAlign="center"
-        sx={{ mb: 4 }}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
       >
-        FAQs
-      </Typography>
-      {FAQs.map((faq, index) => (
-        <FaqItem key={index} {...faq} />
-      ))}
+        <Box
+          sx={{
+            textAlign: "center",
+            mb: { xs: 4, sm: 6 },
+            position: "relative",
+            zIndex: 1,
+          }}
+        >
+          <Typography
+            variant="h3"
+            sx={{
+              background:
+                "linear-gradient(135deg, #5c84f8 0%, #4f46e5 50%, #7c3aed 100%)",
+              backgroundClip: "text",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              fontWeight: 700,
+              fontSize: { xs: "2rem", sm: "2.5rem", md: "3rem" },
+              mb: 2,
+              textShadow: "0 4px 12px rgba(92, 132, 248, 0.3)",
+            }}
+          >
+            Frequently Asked Questions
+          </Typography>
+          <Typography
+            sx={{
+              color: "rgba(255, 255, 255, 0.7)",
+              fontSize: { xs: "1rem", sm: "1.1rem" },
+              maxWidth: 600,
+              mx: "auto",
+              lineHeight: 1.6,
+            }}
+          >
+            Everything you need to know about our AI-powered flashcard generator
+          </Typography>
+        </Box>
+      </motion.div>
+
+      <Box
+        sx={{
+          maxWidth: 800,
+          mx: "auto",
+          display: "flex",
+          flexDirection: "column",
+          gap: 3,
+          position: "relative",
+          zIndex: 1,
+        }}
+      >
+        {FAQs.map((faq, index) => (
+          <FaqItem key={index} {...faq} index={index} />
+        ))}
+      </Box>
+
+      {/* Decorative elements */}
+      <Box
+        sx={{
+          position: "absolute",
+          top: "10%",
+          left: "5%",
+          width: 100,
+          height: 100,
+          borderRadius: "50%",
+          background:
+            "radial-gradient(circle, rgba(92, 132, 248, 0.1) 0%, transparent 70%)",
+          pointerEvents: "none",
+        }}
+      />
+      <Box
+        sx={{
+          position: "absolute",
+          bottom: "15%",
+          right: "8%",
+          width: 80,
+          height: 80,
+          borderRadius: "50%",
+          background:
+            "radial-gradient(circle, rgba(124, 58, 237, 0.1) 0%, transparent 70%)",
+          pointerEvents: "none",
+        }}
+      />
     </Box>
   );
 };
