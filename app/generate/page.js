@@ -242,7 +242,7 @@ export default function Generate() {
         >
           <Box
             sx={{
-              p: { xs: 3, sm: 4 },
+              p: { xs: 2, sm: 4 },
               background:
                 "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)",
               border: "1px solid rgba(92, 132, 248, 0.2)",
@@ -258,7 +258,8 @@ export default function Generate() {
               fullWidth
               multiline
               required
-              rows={{ xs: 4, sm: 6 }}
+              minRows={6}
+              maxRows={12}
               variant="outlined"
               sx={{
                 mb: 3,
