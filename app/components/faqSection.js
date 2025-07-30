@@ -48,10 +48,10 @@ const FaqItem = ({ question, answer, index }) => {
         <Box
           onClick={toggleExpand}
           sx={{
-            p: 3,
+            p: { xs: 2.5, sm: 3 },
             display: "flex",
             alignItems: "center",
-            gap: 2,
+            gap: { xs: 1.5, sm: 2 },
             cursor: "pointer",
             transition: "all 0.2s ease",
             "&:hover": {
@@ -64,15 +64,17 @@ const FaqItem = ({ question, answer, index }) => {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              width: 40,
-              height: 40,
+              width: { xs: 32, sm: 40 },
+              height: { xs: 32, sm: 40 },
               borderRadius: "50%",
               background: "linear-gradient(135deg, #5c84f8 0%, #4f46e5 100%)",
               boxShadow: "0 4px 12px rgba(92, 132, 248, 0.3)",
               flexShrink: 0,
             }}
           >
-            <HelpOutline sx={{ color: "white", fontSize: 20 }} />
+            <HelpOutline
+              sx={{ color: "white", fontSize: { xs: 16, sm: 20 } }}
+            />
           </Box>
 
           <Typography
@@ -81,7 +83,7 @@ const FaqItem = ({ question, answer, index }) => {
             sx={{
               color: "white",
               flex: 1,
-              fontSize: { xs: "1rem", sm: "1.1rem" },
+              fontSize: { xs: "0.9rem", sm: "1rem", md: "1.1rem" },
               lineHeight: 1.4,
             }}
           >
@@ -93,9 +95,10 @@ const FaqItem = ({ question, answer, index }) => {
               color: "#5c84f8",
               transition: "transform 0.3s ease",
               transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)",
+              p: { xs: 0.5, sm: 1 },
             }}
           >
-            <KeyboardArrowDown />
+            <KeyboardArrowDown sx={{ fontSize: { xs: 20, sm: 24 } }} />
           </IconButton>
         </Box>
 
@@ -107,8 +110,8 @@ const FaqItem = ({ question, answer, index }) => {
           >
             <Box
               sx={{
-                px: 3,
-                pb: 3,
+                px: { xs: 2.5, sm: 3 },
+                pb: { xs: 2.5, sm: 3 },
                 pt: 0,
                 borderTop: "1px solid rgba(92, 132, 248, 0.1)",
                 backgroundColor: "rgba(0, 0, 0, 0.2)",
@@ -118,8 +121,8 @@ const FaqItem = ({ question, answer, index }) => {
                 sx={{
                   color: "rgba(255, 255, 255, 0.9)",
                   lineHeight: 1.6,
-                  fontSize: "0.95rem",
-                  pl: 6.5, // Align with question text
+                  fontSize: { xs: "0.85rem", sm: "0.95rem" },
+                  pl: { xs: 5, sm: 6.5 }, // Align with question text
                 }}
               >
                 {answer}
@@ -146,9 +149,9 @@ const FaqSection = () => {
           content: '""',
           position: "absolute",
           top: "20%",
-          left: "10%",
-          width: 200,
-          height: 200,
+          left: { xs: "5%", sm: "10%" },
+          width: { xs: 120, sm: 200 },
+          height: { xs: 120, sm: 200 },
           borderRadius: "50%",
           background:
             "radial-gradient(circle, rgba(92, 132, 248, 0.05) 0%, transparent 70%)",
@@ -158,9 +161,9 @@ const FaqSection = () => {
           content: '""',
           position: "absolute",
           bottom: "20%",
-          right: "10%",
-          width: 150,
-          height: 150,
+          right: { xs: "5%", sm: "10%" },
+          width: { xs: 100, sm: 150 },
+          height: { xs: 100, sm: 150 },
           borderRadius: "50%",
           background:
             "radial-gradient(circle, rgba(124, 58, 237, 0.05) 0%, transparent 70%)",
@@ -217,7 +220,7 @@ const FaqSection = () => {
           mx: "auto",
           display: "flex",
           flexDirection: "column",
-          gap: 3,
+          gap: { xs: 2, sm: 3 },
           position: "relative",
           zIndex: 1,
         }}
