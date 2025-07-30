@@ -153,7 +153,7 @@ export default function Generate() {
       }
     } catch (error) {
       console.error("Error generating flashcards:", error);
-      alert("Please try again.");
+      alert("Please try again after sometime, Service Unavailable");
     } finally {
       setIsGenerating(false);
     }
