@@ -42,6 +42,7 @@ const FeatureGridItem = ({ title, description, index }) => {
     <Grid
       item
       xs={12}
+      sm={6}
       md={4}
       sx={{
         display: "flex",
@@ -61,16 +62,16 @@ const FeatureGridItem = ({ title, description, index }) => {
       >
         <Box
           sx={{
-            p: 4,
+            p: { xs: 3, sm: 4 },
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             textAlign: "center",
-            minHeight: 280,
+            minHeight: { xs: 240, sm: 280 },
             background:
               "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)",
             border: "1px solid rgba(92, 132, 248, 0.2)",
-            borderRadius: 4,
+            borderRadius: { xs: 3, sm: 4 },
             boxShadow: "0 15px 35px rgba(0, 0, 0, 0.3)",
             position: "relative",
             overflow: "hidden",
@@ -112,12 +113,12 @@ const FeatureGridItem = ({ title, description, index }) => {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              width: 80,
-              height: 80,
+              width: { xs: 64, sm: 80 },
+              height: { xs: 64, sm: 80 },
               borderRadius: "50%",
               background: "linear-gradient(135deg, #5c84f8 0%, #4f46e5 100%)",
               boxShadow: "0 10px 30px rgba(92, 132, 248, 0.4)",
-              mb: 3,
+              mb: { xs: 2, sm: 3 },
               position: "relative",
               "&::before": {
                 content: '""',
@@ -130,7 +131,9 @@ const FeatureGridItem = ({ title, description, index }) => {
               },
             }}
           >
-            <Box sx={{ color: "white", fontSize: 32 }}>{getIcon(title)}</Box>
+            <Box sx={{ color: "white", fontSize: { xs: 24, sm: 32 } }}>
+              {getIcon(title)}
+            </Box>
           </Box>
 
           <Typography
@@ -138,7 +141,8 @@ const FeatureGridItem = ({ title, description, index }) => {
             sx={{
               fontWeight: 700,
               color: "white",
-              mb: 2,
+              mb: { xs: 1.5, sm: 2 },
+              fontSize: { xs: "1.25rem", sm: "1.5rem" },
               textShadow: "0 2px 10px rgba(0, 0, 0, 0.5)",
             }}
           >
@@ -147,11 +151,11 @@ const FeatureGridItem = ({ title, description, index }) => {
 
           <Box
             sx={{
-              width: 50,
+              width: { xs: 40, sm: 50 },
               height: 3,
               background: "linear-gradient(135deg, #5c84f8 0%, #4f46e5 100%)",
               borderRadius: 2,
-              mb: 3,
+              mb: { xs: 2, sm: 3 },
             }}
           />
 
@@ -159,7 +163,7 @@ const FeatureGridItem = ({ title, description, index }) => {
             sx={{
               color: "rgba(255, 255, 255, 0.8)",
               lineHeight: 1.6,
-              fontSize: "1rem",
+              fontSize: { xs: "0.9rem", sm: "1rem" },
               textShadow: "0 1px 3px rgba(0, 0, 0, 0.3)",
             }}
           >
@@ -250,7 +254,7 @@ const FeatureGrid = () => {
 
       <Grid
         container
-        spacing={4}
+        spacing={{ xs: 3, sm: 4 }}
         sx={{
           position: "relative",
           zIndex: 1,
