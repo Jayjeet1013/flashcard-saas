@@ -1,21 +1,16 @@
-
 // Using Gemini
 import { NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const systemPrompt = (userMessage) => `
     You are a flashcard creator. 
-    you want to create a flashcard about ${userMessage}. 
-    Please provide the question and answer for the flashcard.
-    Create only 10 flashcards
+    Create flashcards about: ${userMessage}
+    Create exactly 10 flashcards.
 
-     Return the result strictly in JSON format, without any markdown, backticks, or additional formatting:
-    {
-        "flashcards": [{
-            "front": "Question text here",
-            "back": "Answer text here"
-        }]
-    }
+    CRITICAL: Return ONLY valid JSON without any markdown formatting, code blocks, backticks, or explanatory text.
+    
+    Required format:
+    {"flashcards":[{"front":"Question text here","back":"Answer text here"}]}
 `;
 
 const apiKey = process.env.GOOGLE_API_KEY;
@@ -25,7 +20,35 @@ if (!apiKey) {
 }
 
 const genAI = new GoogleGenerativeAI(apiKey);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const model = genAI.getGenerativeModel({
+  model: "gemini-2.0-flash",
+  generationConfig: {
+    temperature: 0.7,
+    topK: 40,
+    topP: 0.95,
+    maxOutputTokens: 2048,
+  },
+});
+
+// Function to extract JSON from response
+function extractJsonFromResponse(responseText) {
+  let cleanedText = responseText.trim();
+
+  // Remove various markdown patterns
+  cleanedText = cleanedText.replace(/^```json\s*/i, "");
+  cleanedText = cleanedText.replace(/^```\s*/, "");
+  cleanedText = cleanedText.replace(/\s*```$/, "");
+
+  // Find JSON object boundaries
+  const jsonStart = cleanedText.indexOf("{");
+  const jsonEnd = cleanedText.lastIndexOf("}");
+
+  if (jsonStart !== -1 && jsonEnd !== -1 && jsonEnd > jsonStart) {
+    cleanedText = cleanedText.substring(jsonStart, jsonEnd + 1);
+  }
+
+  return cleanedText.trim();
+}
 
 export async function POST(req) {
   try {
@@ -40,29 +63,32 @@ export async function POST(req) {
     }
 
     const prompt = systemPrompt(userMessage);
-
-    // Log prompt for debugging
     console.log("Generated prompt:", prompt);
 
     const result = await model.generateContent(prompt);
-
-    // Log raw result for debugging
-    console.log("Raw model result:", result);
-
-    // Ensure result is properly parsed
     const responseText = await result.response.text();
 
-    // Log the response text
-    console.log("Response text:", responseText);
+    console.log("Raw response:", responseText);
 
-    // Attempt to parse JSON if the API returns a JSON string
+    // Extract and clean JSON
+    const cleanedResponseText = extractJsonFromResponse(responseText);
+    console.log("Cleaned response:", cleanedResponseText);
+
+    // Parse JSON
     let flashcards;
     try {
-      flashcards = JSON.parse(responseText);
+      flashcards = JSON.parse(cleanedResponseText);
+
+      // Validate the structure
+      if (!flashcards.flashcards || !Array.isArray(flashcards.flashcards)) {
+        throw new Error("Invalid flashcard structure");
+      }
     } catch (parseError) {
-      console.error("Error parsing response text:", parseError);
+      console.error("JSON parsing error:", parseError);
+      console.error("Failed text:", cleanedResponseText);
+
       return NextResponse.json(
-        { error: "Failed to parse flashcard response" },
+        { error: "Failed to parse flashcard response. Please try again." },
         { status: 500 }
       );
     }
@@ -71,10 +97,9 @@ export async function POST(req) {
   } catch (error) {
     console.error("Error generating response:", error);
     return NextResponse.json(
-      { error: "Error generating response" },
+      { error: "Error generating response. Please try again." },
       { status: 500 }
     );
   }
 }
-
 
