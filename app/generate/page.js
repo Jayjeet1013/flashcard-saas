@@ -200,13 +200,13 @@ export default function Generate() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <Box sx={{ color: "white", mb: 6 }}>
+          <Box sx={{ color: "white", mb: { xs: 4, sm: 6 } }}>
             <Typography
               variant="h3"
               component="h1"
               sx={{
                 fontWeight: 800,
-                fontSize: { xs: "2rem", sm: "2.5rem", md: "3rem" },
+                fontSize: { xs: "1.8rem", sm: "2.5rem", md: "3rem" },
                 background:
                   "linear-gradient(135deg, #5c84f8 0%, #4f46e5 50%, #7c3aed 100%)",
                 backgroundClip: "text",
@@ -226,6 +226,8 @@ export default function Generate() {
                 maxWidth: 600,
                 mx: "auto",
                 lineHeight: 1.6,
+                fontSize: { xs: "1rem", sm: "1.25rem" },
+                px: { xs: 2, sm: 0 },
               }}
             >
               Transform your study material into interactive flashcards with AI
@@ -240,11 +242,11 @@ export default function Generate() {
         >
           <Box
             sx={{
-              p: 4,
+              p: { xs: 3, sm: 4 },
               background:
                 "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)",
               border: "1px solid rgba(92, 132, 248, 0.2)",
-              borderRadius: 4,
+              borderRadius: { xs: 3, sm: 4 },
               boxShadow: "0 15px 35px rgba(0, 0, 0, 0.3)",
               mb: 4,
             }}
@@ -256,7 +258,7 @@ export default function Generate() {
               fullWidth
               multiline
               required
-              rows={6}
+              rows={{ xs: 4, sm: 6 }}
               variant="outlined"
               sx={{
                 mb: 3,
@@ -283,7 +285,7 @@ export default function Generate() {
               inputProps={{
                 style: {
                   color: "white",
-                  fontSize: "1rem",
+                  fontSize: { xs: "0.9rem", sm: "1rem" },
                   lineHeight: 1.6,
                 },
               }}
@@ -296,12 +298,12 @@ export default function Generate() {
                 fullWidth
                 disabled={isGenerating}
                 sx={{
-                  py: 2,
+                  py: { xs: 1.5, sm: 2 },
                   borderRadius: 3,
                   background: isGenerating
                     ? "linear-gradient(135deg, #666 0%, #555 100%)"
                     : "linear-gradient(135deg, #5c84f8 0%, #4f46e5 100%)",
-                  fontSize: "1.1rem",
+                  fontSize: { xs: "1rem", sm: "1.1rem" },
                   fontWeight: 600,
                   boxShadow: isGenerating
                     ? "0 5px 15px rgba(0, 0, 0, 0.2)"
@@ -334,7 +336,7 @@ export default function Generate() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <Box sx={{ mb: 4 }}>
+            <Box sx={{ mb: { xs: 3, sm: 4 } }}>
               <Typography
                 variant="h4"
                 component="h2"
@@ -343,6 +345,7 @@ export default function Generate() {
                   fontWeight: 700,
                   mb: 1,
                   textAlign: "center",
+                  fontSize: { xs: "1.5rem", sm: "2rem" },
                 }}
               >
                 Your Flashcards
@@ -352,6 +355,8 @@ export default function Generate() {
                   color: "rgba(255, 255, 255, 0.7)",
                   textAlign: "center",
                   mb: 4,
+                  fontSize: { xs: "0.9rem", sm: "1rem" },
+                  px: { xs: 2, sm: 0 },
                 }}
               >
                 Click on any card to flip it and see the answer
@@ -359,7 +364,7 @@ export default function Generate() {
 
               <Box
                 sx={{
-                  width: 80,
+                  width: { xs: 60, sm: 80 },
                   height: 4,
                   background:
                     "linear-gradient(135deg, #5c84f8 0%, #4f46e5 100%)",
@@ -370,13 +375,13 @@ export default function Generate() {
               />
             </Box>
 
-            <Grid container spacing={3}>
+            <Grid container spacing={{ xs: 2, sm: 3 }}>
               {flashcards.map((flashcard, index) => (
                 <Grid item xs={12} sm={6} lg={4} key={index}>
                   <Card
                     onClick={() => handleCardClick(index)}
                     sx={{
-                      height: 250,
+                      height: { xs: 200, sm: 250 },
                       cursor: "pointer",
                       background:
                         "linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)",
@@ -418,7 +423,7 @@ export default function Generate() {
                           background:
                             "linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)",
                           borderRadius: 3,
-                          p: 3,
+                          p: { xs: 2, sm: 3 },
                         }}
                       >
                         <Typography
@@ -428,6 +433,7 @@ export default function Generate() {
                             textAlign: "center",
                             lineHeight: 1.4,
                             fontWeight: 500,
+                            fontSize: { xs: "1rem", sm: "1.25rem" },
                           }}
                         >
                           {flashcard.front}
@@ -448,7 +454,7 @@ export default function Generate() {
                           background:
                             "linear-gradient(135deg, #16213e 0%, #0f3460 100%)",
                           borderRadius: 3,
-                          p: 3,
+                          p: { xs: 2, sm: 3 },
                         }}
                       >
                         <Typography
@@ -458,6 +464,7 @@ export default function Generate() {
                             textAlign: "center",
                             lineHeight: 1.4,
                             fontWeight: 500,
+                            fontSize: { xs: "1rem", sm: "1.25rem" },
                           }}
                         >
                           {flashcard.back}
@@ -477,18 +484,24 @@ export default function Generate() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
-            <Box sx={{ mt: 6, display: "flex", justifyContent: "center" }}>
+            <Box
+              sx={{
+                mt: { xs: 4, sm: 6 },
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
               <Button
                 variant="contained"
                 size="large"
                 onClick={handleOpenDialog}
                 sx={{
-                  px: 4,
-                  py: 2,
+                  px: { xs: 3, sm: 4 },
+                  py: { xs: 1.5, sm: 2 },
                   borderRadius: 3,
                   background:
                     "linear-gradient(135deg, #22c55e 0%, #16a34a 100%)",
-                  fontSize: "1.1rem",
+                  fontSize: { xs: "1rem", sm: "1.1rem" },
                   fontWeight: 600,
                   boxShadow: "0 10px 30px rgba(34, 197, 94, 0.4)",
                   transition: "all 0.3s ease",
