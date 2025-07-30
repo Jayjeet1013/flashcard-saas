@@ -33,7 +33,7 @@ export default function Flashcard() {
   const { isLoaded, isSignedIn, user } = useUser();
   const [flashcardSets, setFlashcardSets] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [deletedIndexes, setDeletedIndexes] = useState(new Set());
+  const [deletingIndex, setDeletingIndex] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -63,12 +63,13 @@ export default function Flashcard() {
   };
 
   const handleDeleteClick = async (index) => {
-    setDeletedIndexes((prev) => new Set(prev).add(index));
+    setDeletingIndex(index);
 
     setTimeout(async () => {
       const updatedFlashcardSets = flashcardSets.filter((_, i) => i !== index);
 
       setFlashcardSets(updatedFlashcardSets);
+      setDeletingIndex(null);
 
       const docRef = doc(collection(db, "users"), user.id);
       await updateDoc(docRef, { flashcardSets: updatedFlashcardSets });
@@ -213,7 +214,7 @@ export default function Flashcard() {
                       whileHover={{ y: -8 }}
                       layout
                     >
-                      <Fade in={!deletedIndexes.has(index)} timeout={300}>
+                      <Fade in={deletingIndex !== index} timeout={300}>
                         <Card
                           sx={{
                             position: "relative",
