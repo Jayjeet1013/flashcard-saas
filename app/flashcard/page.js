@@ -84,7 +84,7 @@ export default function Flashcard() {
       maxWidth="md"
       sx={{
         paddingBottom: "100px",
-        paddingTop: "80px", // Add top padding to avoid header overlap
+        paddingTop: { xs: "70px", sm: "80px" }, // Responsive top padding
         height: "100vh",
         background:
           "linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%)",
@@ -101,9 +101,9 @@ export default function Flashcard() {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          mt: 4, // Increased top margin
-          mb: 3,
-          px: 2, // Add horizontal padding
+          mt: { xs: 2, sm: 4 }, // Responsive top margin
+          mb: { xs: 2, sm: 3 },
+          px: { xs: 1, sm: 2 }, // Responsive horizontal padding
         }}
       >
         <Button
@@ -111,11 +111,12 @@ export default function Flashcard() {
           sx={{
             background: "linear-gradient(135deg, #5c84f8 0%, #4f46e5 100%)",
             color: "white",
-            px: 3,
-            py: 1,
+            px: { xs: 2, sm: 3 },
+            py: { xs: 0.5, sm: 1 },
             borderRadius: 2,
             textTransform: "none",
             fontWeight: "bold",
+            fontSize: { xs: "0.8rem", sm: "0.875rem" },
             "&:hover": {
               background: "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
               transform: "translateY(-2px)",
@@ -124,7 +125,12 @@ export default function Flashcard() {
             transition: "all 0.3s ease",
           }}
         >
-          ← Back to Flashcards
+          <Box component="span" sx={{ display: { xs: "none", sm: "inline" } }}>
+            ← Back to Flashcards
+          </Box>
+          <Box component="span" sx={{ display: { xs: "inline", sm: "none" } }}>
+            ← Back
+          </Box>
         </Button>
 
         <Typography
@@ -135,17 +141,24 @@ export default function Flashcard() {
             color: "white",
             textAlign: "center",
             flex: 1,
-            mx: 3,
+            mx: { xs: 1, sm: 3 },
+            fontSize: { xs: "1.2rem", sm: "1.5rem", md: "2rem" },
           }}
         >
           {flashcardSetId}
         </Typography>
 
         {/* Empty space for balance */}
-        <Box sx={{ width: "200px" }} />
+        <Box sx={{ width: { xs: "60px", sm: "200px" } }} />
       </Box>
 
-      <Divider sx={{ bgcolor: "rgba(255, 255, 255, 0.2)", mb: 4, mx: 2 }} />
+      <Divider
+        sx={{
+          bgcolor: "rgba(255, 255, 255, 0.2)",
+          mb: { xs: 3, sm: 4 },
+          mx: { xs: 1, sm: 2 },
+        }}
+      />
 
       {/* Scrollable Cards Container */}
       <Box
@@ -153,7 +166,7 @@ export default function Flashcard() {
           flex: 1,
           overflowY: "auto",
           paddingRight: "8px",
-          px: 2, // Add horizontal padding to cards container
+          px: { xs: 1, sm: 2 }, // Responsive horizontal padding
           "&::-webkit-scrollbar": {
             width: "8px",
           },
@@ -182,7 +195,7 @@ export default function Flashcard() {
             <CircularProgress sx={{ color: "#5c84f8" }} />
           </Box>
         ) : (
-          <Grid container spacing={3}>
+          <Grid container spacing={{ xs: 2, sm: 3 }}>
             {flashcards.length > 0 ? (
               flashcards.map((flashcard, index) => (
                 <Grid item xs={12} sm={6} md={4} key={index}>
@@ -206,7 +219,7 @@ export default function Flashcard() {
                           sx={{
                             position: "relative",
                             width: "100%",
-                            height: "240px",
+                            height: { xs: "200px", sm: "240px" },
                             perspective: "1000px",
                           }}
                         >
@@ -234,7 +247,7 @@ export default function Flashcard() {
                                 background:
                                   "linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)",
                                 color: "white",
-                                p: 3,
+                                p: { xs: 2, sm: 3 },
                                 textAlign: "center",
                                 borderRadius: 3,
                               }}
@@ -242,7 +255,10 @@ export default function Flashcard() {
                               <Typography
                                 variant="h6"
                                 component="div"
-                                sx={{ lineHeight: 1.4 }}
+                                sx={{
+                                  lineHeight: 1.4,
+                                  fontSize: { xs: "1rem", sm: "1.25rem" },
+                                }}
                               >
                                 {flashcard.front || "Question not available"}
                               </Typography>
@@ -260,7 +276,7 @@ export default function Flashcard() {
                                 background:
                                   "linear-gradient(135deg, #16213e 0%, #0f3460 100%)",
                                 color: "white",
-                                p: 3,
+                                p: { xs: 2, sm: 3 },
                                 textAlign: "center",
                                 borderRadius: 3,
                               }}
@@ -268,7 +284,10 @@ export default function Flashcard() {
                               <Typography
                                 variant="h6"
                                 component="div"
-                                sx={{ lineHeight: 1.4 }}
+                                sx={{
+                                  lineHeight: 1.4,
+                                  fontSize: { xs: "1rem", sm: "1.25rem" },
+                                }}
                               >
                                 {flashcard.back || "Answer not available"}
                               </Typography>
