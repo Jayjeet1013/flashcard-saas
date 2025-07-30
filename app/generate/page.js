@@ -324,8 +324,8 @@ export default function Generate() {
                 }}
               >
                 {isGenerating
-                  ? "Generating your flashcards..."
-                  : "Generate Flashcards with AI ✨"}
+                  ? "Generating Flashcards..."
+                  : "Generate Flashcards ✨"}
               </Button>
             </motion.div>
           </Box>
