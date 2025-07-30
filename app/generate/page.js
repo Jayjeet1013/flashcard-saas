@@ -355,79 +355,98 @@ export default function Generate() {
             <Grid container spacing={3}>
               {flashcards.map((flashcard, index) => (
                 <Grid item xs={12} sm={6} lg={4} key={index}>
-                  <motion.div
-                    initial={{ opacity: 0, y: 20, scale: 0.9 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    whileHover={{ y: -5 }}
+                  <Card
+                    onClick={() => handleCardClick(index)}
+                    sx={{
+                      height: 250,
+                      cursor: "pointer",
+                      background:
+                        "linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)",
+                      border: "1px solid rgba(92, 132, 248, 0.2)",
+                      borderRadius: 3,
+                      position: "relative",
+                      perspective: "1000px",
+                      transition: "all 0.3s ease",
+                      "&:hover": {
+                        transform: "translateY(-5px)",
+                        boxShadow: "0 15px 35px rgba(92, 132, 248, 0.3)",
+                        border: "1px solid rgba(92, 132, 248, 0.4)",
+                      },
+                    }}
                   >
-                    <Card
-                      className="card-container"
-                      onClick={() => handleCardClick(index)}
+                    <Box
                       sx={{
-                        height: 250,
-                        cursor: "pointer",
-                        transition: "all 0.3s ease",
-                        "&:hover": {
-                          transform: "translateY(-5px)",
-                          boxShadow: "0 20px 40px rgba(92, 132, 248, 0.2)",
-                        },
+                        position: "absolute",
+                        width: "100%",
+                        height: "100%",
+                        transformStyle: "preserve-3d",
+                        transition: "transform 0.6s",
+                        transform:
+                          flippedIndex === index
+                            ? "rotateY(180deg)"
+                            : "rotateY(0deg)",
                       }}
                     >
-                      <div
-                        className={`card ${
-                          flippedIndex === index ? "flipped" : ""
-                        }`}
+                      {/* Front Side */}
+                      <Box
+                        sx={{
+                          position: "absolute",
+                          width: "100%",
+                          height: "100%",
+                          backfaceVisibility: "hidden",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          background:
+                            "linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)",
+                          borderRadius: 3,
+                          p: 3,
+                        }}
                       >
-                        <div className="card-front">
-                          <CardContent
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              textAlign: "center",
-                              height: "100%",
-                              p: 3,
-                            }}
-                          >
-                            <Typography
-                              variant="h6"
-                              sx={{
-                                color: "white",
-                                lineHeight: 1.4,
-                                fontWeight: 500,
-                              }}
-                            >
-                              {flashcard.front}
-                            </Typography>
-                          </CardContent>
-                        </div>
-                        <div className="card-back">
-                          <CardContent
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              textAlign: "center",
-                              height: "100%",
-                              p: 3,
-                            }}
-                          >
-                            <Typography
-                              variant="h6"
-                              sx={{
-                                color: "white",
-                                lineHeight: 1.4,
-                                fontWeight: 500,
-                              }}
-                            >
-                              {flashcard.back}
-                            </Typography>
-                          </CardContent>
-                        </div>
-                      </div>
-                    </Card>
-                  </motion.div>
+                        <Typography
+                          variant="h6"
+                          sx={{
+                            color: "white",
+                            textAlign: "center",
+                            lineHeight: 1.4,
+                            fontWeight: 500,
+                          }}
+                        >
+                          {flashcard.front}
+                        </Typography>
+                      </Box>
+
+                      {/* Back Side */}
+                      <Box
+                        sx={{
+                          position: "absolute",
+                          width: "100%",
+                          height: "100%",
+                          backfaceVisibility: "hidden",
+                          transform: "rotateY(180deg)",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          background:
+                            "linear-gradient(135deg, #16213e 0%, #0f3460 100%)",
+                          borderRadius: 3,
+                          p: 3,
+                        }}
+                      >
+                        <Typography
+                          variant="h6"
+                          sx={{
+                            color: "white",
+                            textAlign: "center",
+                            lineHeight: 1.4,
+                            fontWeight: 500,
+                          }}
+                        >
+                          {flashcard.back}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Card>
                 </Grid>
               ))}
             </Grid>
