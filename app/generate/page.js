@@ -38,6 +38,7 @@ export default function Generate() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [flippedIndex, setFlippedIndex] = useState(null);
   const [textFieldError, setTextFieldError] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const handleOpenDialog = () => setDialogOpen(true);
   const handleCloseDialog = () => setDialogOpen(false);
@@ -113,15 +114,18 @@ export default function Generate() {
 
   const handleSubmit = async () => {
     setTextFieldError(false);
+    setIsGenerating(true);
 
     if (!text.trim()) {
       alert("Please enter some text to generate flashcards.");
       setTextFieldError(true);
+      setIsGenerating(false);
       return;
     }
     //  const isSubscribed = await checkSubscriptionStatus(user.id);
     //  if (!isSubscribed) {
     //   alert("You need an active subscription to generate flashcards.");
+    //   setIsGenerating(false);
     //   return; // Prevent further execution
     // }
     try {
@@ -150,6 +154,8 @@ export default function Generate() {
     } catch (error) {
       console.error("Error generating flashcards:", error);
       alert("Please try again.");
+    } finally {
+      setIsGenerating(false);
     }
   };
 
@@ -288,23 +294,35 @@ export default function Generate() {
                 size="large"
                 onClick={handleSubmit}
                 fullWidth
+                disabled={isGenerating}
                 sx={{
                   py: 2,
                   borderRadius: 3,
-                  background:
-                    "linear-gradient(135deg, #5c84f8 0%, #4f46e5 100%)",
+                  background: isGenerating
+                    ? "linear-gradient(135deg, #666 0%, #555 100%)"
+                    : "linear-gradient(135deg, #5c84f8 0%, #4f46e5 100%)",
                   fontSize: "1.1rem",
                   fontWeight: 600,
-                  boxShadow: "0 10px 30px rgba(92, 132, 248, 0.4)",
+                  boxShadow: isGenerating
+                    ? "0 5px 15px rgba(0, 0, 0, 0.2)"
+                    : "0 10px 30px rgba(92, 132, 248, 0.4)",
                   transition: "all 0.3s ease",
                   "&:hover": {
-                    background:
-                      "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
-                    boxShadow: "0 15px 40px rgba(92, 132, 248, 0.6)",
+                    background: isGenerating
+                      ? "linear-gradient(135deg, #666 0%, #555 100%)"
+                      : "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
+                    boxShadow: isGenerating
+                      ? "0 5px 15px rgba(0, 0, 0, 0.2)"
+                      : "0 15px 40px rgba(92, 132, 248, 0.6)",
+                  },
+                  "&.Mui-disabled": {
+                    color: "rgba(255, 255, 255, 0.6)",
                   },
                 }}
               >
-                Generate Flashcards with AI ✨
+                {isGenerating
+                  ? "Generating your flashcards..."
+                  : "Generate Flashcards with AI ✨"}
               </Button>
             </motion.div>
           </Box>
