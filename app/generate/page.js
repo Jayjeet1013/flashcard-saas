@@ -153,7 +153,9 @@ export default function Generate() {
       }
     } catch (error) {
       console.error("Error generating flashcards:", error);
-      alert("Please try again later, Service Unavailable");
+      alert(
+        "AI service is temporarily overloaded. Please try again in a few moments."
+      );
     } finally {
       setIsGenerating(false);
     }
